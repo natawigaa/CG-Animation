@@ -40,7 +40,7 @@ public class TestPro extends JPanel implements ActionListener {
 
         //drawHexCoffin(g2, elapsed, getWidth(), getHeight());
         drawFullCoffin(g2, elapsed, getWidth(), getHeight());
-
+        //drawLyingPerson(g2, flowerSpacing, flowerSpacing, flowerSpacing);
     }
 
     private void drawFlower(Graphics2D g2) {
@@ -69,7 +69,7 @@ public class TestPro extends JPanel implements ActionListener {
         g2.fillPolygon(base);
 
         // ====== คนที่นอนในโลง (เห็นแค่ครึ่งตัวบน) ======
-        drawLyingPerson(g2, cx, cy, 500);
+        //drawLyingPerson(g2, cx, cy, 500);
 
         // ====== ฝาโลงเคลื่อนออกด้านขวา ======
         float progress = Math.min(1.0f, elapsed / 3000f); // 3 วินาทีเปิดฝา
@@ -148,4 +148,5 @@ public class TestPro extends JPanel implements ActionListener {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
+    
 }
