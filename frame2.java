@@ -36,9 +36,28 @@ public class frame2 extends JPanel  {
     private boolean showBase = false;
     private boolean showLid = false;
     
+    private int backgroundStep = -1; // -1 = สีปกติ, 0-3 = สี transition
+    private final Color[] bgColors = {
+    new Color(255, 240, 196),
+    new Color(140, 16, 7),
+    new Color(102, 11, 5),
+    new Color(62, 7, 3),
+    //new Color(0,0,0)
+};
     public frame2() {
+        // Timer แสดงสีเปลี่ยน 0.5 วิ ต่อสี
+    Timer bgChangeTimer = new Timer(500, e -> {
+        backgroundStep++;
+        repaint();
+        if (backgroundStep >= bgColors.length) {
+            backgroundStep = bgColors.length - 1; // หยุดที่สีสุดท้าย
+            ((Timer)e.getSource()).stop();
+        }
+        repaint();
+    });
+        bgChangeTimer.start();
         // Timer เปลี่ยนหน้าเป็นหัวกะโหลกหลัง 2 วินาที
-        Timer boneTimer = new Timer(1000, e -> {
+        Timer boneTimer = new Timer(2000, e -> {
             showBone = true;
             repaint();
 
@@ -107,7 +126,7 @@ public class frame2 extends JPanel  {
         Timer startBaseTimer = new Timer(3800, e -> {
             showBase = true;
             Timer moveBase = new Timer(16, ev -> {
-                baseCoffinOffsetX += 10;
+                baseCoffinOffsetX += 20;
                 if (baseCoffinOffsetX >= 0) { // มาถึงตำแหน่ง
                     baseCoffinOffsetX = 0;
                     ((Timer) ev.getSource()).stop();
@@ -115,7 +134,7 @@ public class frame2 extends JPanel  {
                     // หลังฐานโลงหยุด → เริ่มเลื่อนฝาโลง
                     showLid = true;
                     Timer moveLid = new Timer(16, ev2 -> {
-                        lidCoffinOffsetX -= 10;
+                        lidCoffinOffsetX -= 20;
                         if (lidCoffinOffsetX <= 0) {
                             lidCoffinOffsetX = 0;
                             ((Timer) ev2.getSource()).stop();
@@ -143,6 +162,13 @@ public class frame2 extends JPanel  {
         g2d.setColor(new Color(220, 220, 220));
         g2d.fillRect(0, 0, getWidth(), getHeight());
 
+        // พื้นหลัง
+        if (backgroundStep >= 0 && backgroundStep < bgColors.length) {
+            g2d.setColor(bgColors[backgroundStep]);
+        } else {
+            g2d.setColor(new Color(220, 220, 220)); // สีปกติ
+        }
+        g2d.fillRect(0, 0, getWidth(), getHeight());
          // 1. วาดฐานโลง (ด้านหลัง)
         if (showBase) {
             g2d.translate(baseCoffinOffsetX, 0);
@@ -340,6 +366,30 @@ public class frame2 extends JPanel  {
         base.addPoint(cx - 200, cy);
         g2d.setColor(new Color(102, 51, 0));
         g2d.fillPolygon(base);
+        g2d.setColor(Color.BLACK);
+        g2d.drawPolygon(base);
+        //red carpet
+            Polygon smallBase = new Polygon();
+            smallBase.addPoint(cx - 90, cy - 180);   // บนซ้าย
+            smallBase.addPoint(cx + 90, cy - 180);   // บนขวา
+            smallBase.addPoint(cx + 180, cy);        // กลางขวา
+            smallBase.addPoint(cx + 100, cy + 280);   // ล่างขวา
+            smallBase.addPoint(cx - 100, cy + 280);   // ล่างซ้าย
+            smallBase.addPoint(cx - 180, cy);        // กลางซ้าย
+        // สร้าง Gradient จากบนลงล่าง (แดงเข้ม → แดงสด)
+           GradientPaint redCarpetGradient = new GradientPaint(
+        cx-50, cy -100, new Color(50,0,0),   // ด้านบนแดงสด
+        cx+50, cy +280, new Color(170, 0, 0)     // ด้านล่างแดงเข้มเกือบดำ
+    );
+            g2d.setPaint(redCarpetGradient);
+            g2d.fillPolygon(smallBase);
+
+            // วาดเส้นขอบ
+            g2d.setColor(new Color(0,0,0));
+            g2d.drawPolygon(smallBase);
+
+        
+
     }
 
     private void drawLidCoffin(Graphics2D g2d) {
@@ -355,8 +405,20 @@ public class frame2 extends JPanel  {
         lid.addPoint(cx - 200 , cy);        // กลางซ้าย(100,300)
 
 
-        g2d.setColor(new Color(153, 102, 0)); // ฝาสีน้ำตาลอ่อน
+       
+        // Gradient น้ำตาลเข้ม → น้ำตาลอ่อน
+        GradientPaint lidGradient = new GradientPaint(
+            cx, cy - 200, new Color(60, 30, 10),   // ด้านบนเข้มมาก
+            cx, cy * 2, new Color(153, 102, 0)     // ด้านล่างน้ำตาลอ่อน
+        );
+        g2d.setPaint(lidGradient);
         g2d.fillPolygon(lid);
+
+        // ขอบฝาโลง
+        g2d.setStroke(new BasicStroke(3)); // ความหนาเส้นขอบ
+        g2d.setColor(new Color(50, 25, 5));
+        g2d.drawPolygon(lid);
+        g2d.setStroke(new BasicStroke(1)); // คืนความหนาเส้นขอบ
 
         // ไม้กางเขน
         int crossCenterX = cx;
@@ -366,12 +428,12 @@ public class frame2 extends JPanel  {
         int crossBarWidth = (int)(600 * 0.16);
         int crossBarHeight = (int)(300 * 0.08);
 
-        g2d.setColor(new Color(240, 220, 150)); // สีเหลืองทอง
+        // สีทอง
+        g2d.setColor(new Color(240, 220, 150));
         // แกนยาว (vertical)
-        g2d.fillRect(crossCenterX - crossWidth/2, crossCenterY - crossHeight/8+25, crossWidth, crossHeight);
+        g2d.fillRect(crossCenterX - crossWidth / 2, crossCenterY - crossHeight / 8 + 25, crossWidth, crossHeight);
         // แกนขวาง (horizontal)
-        g2d.fillRect(crossCenterX - crossBarWidth/2, crossCenterY - crossBarHeight+60, crossBarWidth, crossBarHeight);
-
+        g2d.fillRect(crossCenterX - crossBarWidth / 2, crossCenterY - crossBarHeight + 60, crossBarWidth, crossBarHeight);
         
     }
 
