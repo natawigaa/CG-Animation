@@ -40,7 +40,7 @@ public class TestPro extends JPanel implements ActionListener {
 
         //drawHexCoffin(g2, elapsed, getWidth(), getHeight());
         drawFullCoffin(g2, elapsed, getWidth(), getHeight());
-        //drawLyingPerson(g2, flowerSpacing, flowerSpacing, flowerSpacing);
+        drawLyingPerson(g2, flowerSpacing, flowerSpacing, flowerSpacing);
     }
 
     private void drawFlower(Graphics2D g2) {
