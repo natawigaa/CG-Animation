@@ -885,7 +885,42 @@ public class frame2 extends JPanel  {
         g.fillRect((int)x,(int)y,1,1); //ใช้การวาดสี่เหลี่ยมเเทนการวาดจุด
        
     }
-    
+      public static BufferedImage floodFill(BufferedImage image, int x, int y, Color targetColor,
+            Color replacementColor) {
+
+        int targetRGB = targetColor.getRGB();
+        int replacementRGB = replacementColor.getRGB();
+
+        if (image.getRGB(x, y) != targetRGB || targetRGB == replacementRGB) {
+            return image;
+        }
+
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        Queue<Point> queue = new LinkedList<>();
+        queue.add(new Point(x, y));
+
+        while (!queue.isEmpty()) {
+            Point p = queue.remove();
+            int px = p.x;
+            int py = p.y;
+
+            if (px < 0 || px >= width || py < 0 || py >= height)
+                continue;
+            if (image.getRGB(px, py) != targetRGB)
+                continue;
+
+            image.setRGB(px, py, replacementRGB);
+
+            queue.add(new Point(px + 1, py));
+            queue.add(new Point(px - 1, py));
+            queue.add(new Point(px, py + 1));
+            queue.add(new Point(px, py - 1));
+        }
+
+        return image;
+    }
     public static void main(String[] args) {
         JFrame frame = new JFrame("Animation");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
