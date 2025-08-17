@@ -357,8 +357,42 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
     private void drawHand(Graphics2D g2d) {
         int dx = 18; // ลดแกน X ลง 50
         int dy = 169;  // เพิ่มแกน Y ขึ้น 70
-        int x = 14;
-      
+        int x =14;
+     // สร้าง BufferedImage สำหรับวาดมือ
+    int width = 600, height = 600;
+    BufferedImage handImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D gHand = handImage.createGraphics();
+    gHand.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // สร้าง Polygon สำหรับมือขวา
+    Polygon rightHandPolygon = new Polygon();
+    addBezierPointsToPolygon(rightHandPolygon, 289 + dx, 333 + dy, 289 + dx, 330 + dy, 294 + dx, 306 + dy, 269 + dx, 304 + dy);
+    addBezierPointsToPolygon(rightHandPolygon, 269 + dx, 304 + dy, 242 + dx, 300 + dy, 224 + dx, 328 + dy, 231 + dx, 327 + dy);
+    addBezierPointsToPolygon(rightHandPolygon, 231 + dx, 327 + dy, 231 + dx, 327 + dy, 225 + dx, 351 + dy, 247 + dx, 337 + dy);
+    addBezierPointsToPolygon(rightHandPolygon, 247 + dx, 337 + dy, 247 + dx, 337 + dy, 277 + dx, 330 + dy, 289 + dx, 333 + dy);
+
+    // สร้าง Polygon สำหรับมือซ้าย
+    Polygon leftHandPolygon = new Polygon();
+    addBezierPointsToPolygon(leftHandPolygon, 250 + x, 306 + dy, 250 + x, 306 + dy, 244 + x, 285 + dy, 219 + x, 301 + dy);
+    addBezierPointsToPolygon(leftHandPolygon, 219 + x, 301 + dy, 195 + x, 316 + dy, 199 + x, 354 + dy, 231 + x, 339 + dy);
+    addBezierPointsToPolygon(leftHandPolygon, 231 + x, 339 + dy, 231 + x, 339 + dy, 229 + x, 324 + dy, 250 + x, 306 + dy);
+// วาดและเติมสี Polygon มือขวา
+    gHand.setColor(Color.WHITE);
+    gHand.fillPolygon(rightHandPolygon);
+    gHand.setColor(Color.BLACK);
+    gHand.drawPolygon(rightHandPolygon);
+
+    // วาดและเติมสี Polygon มือซ้าย
+    gHand.setColor(Color.WHITE);
+    gHand.fillPolygon(leftHandPolygon);
+    gHand.setColor(Color.BLACK);
+    gHand.drawPolygon(leftHandPolygon);
+
+    // ปิด Graphics2D
+    gHand.dispose();
+
+    // วาด BufferedImage ลงบน Graphics2D หลัก
+    g2d.drawImage(handImage, 0, 0, null);
     }
 
    private void drawBaseCoffin(Graphics2D g2d) {
@@ -444,71 +478,32 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
         
     }
 
-    private void drawShair2(Graphics2D g2d){
-        int dx = 30;
-        int dy = 160;
-
-        GeneralPath sh = new GeneralPath();
-        sh.moveTo(248+dx, 200+dy);
-        sh.lineTo(423+dx, 215+dy);
-        sh.curveTo(423+dx, 215+dy, 440+dx, 214+dy, 440+dx, 245+dy);
-        sh.lineTo(433+dx, 457+dy);
-        sh.lineTo(355+dx, 485+dy);
-        sh.lineTo(146+dx, 451+dy);
-        sh.lineTo(139+dx, 354+dy);
-        sh.curveTo(139+dx, 354+dy, 135+dx, 330+dy, 207+dx, 306+dy);
-        sh.curveTo(207+dx, 306+dy, 209+dx, 200+dy, 248+dx, 200+dy);
-        g2d.setColor(new Color(210,210,210));
-        g2d.fill(sh);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(sh);
-
-        g2d.drawLine(139+dx, 354+dy, 351+dx, 388+dy);
-        g2d.drawLine(351+dx, 388+dy, 355+dx, 485+dy);
-
-        // g2d.drawLine(396,372,351,388);
-        bezierCurve(g2d, 351+dx, 388+dy, 340+dx, 368+dy, 394+dx, 333+dy, 394+dx, 333+dy);
-        g2d.drawLine(207+dx, 306+dy, 393+dx, 330+dy);
-        bezierCurve(g2d, 423+dx, 215+dy, 385+dx, 197+dy, 393+dx, 325+dy, 393+dx, 325+dy);
-        g2d.drawLine(393+dx, 325+dy, 402+dx, 468+dy);
-
-    }
     private void drawShair(Graphics2D g2d){
     int dx = 30;
     int dy = 160;
 
-    // สร้าง BufferedImage และ Graphics2D สำหรับการวาดเก้าอี้และเติมสี
-    int width = 600, height = 600; // กำหนดขนาดตามที่โปรแกรมหลักใช้
-    BufferedImage chairImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D chairG2d = chairImage.createGraphics();
+    // สร้าง Polygon
+    Polygon chairPolygon = new Polygon();
 
-    // วาดเส้นขอบของเก้าอี้ด้วยสีดำ เพื่อให้ floodFill สามารถเติมสีได้
-    chairG2d.setColor(Color.BLACK);
-
-    // วาดรูปทรงปิดของเก้าอี้
-    // ต้องวาดแต่ละเส้นเชื่อมต่อกันเป็นรูปทรงปิด
-    bresenhamLine(chairG2d, 248 + dx, 200 + dy, 423 + dx, 215 + dy,2); // sh.lineTo(423+dx, 215+dy);
-    bezierCurve(chairG2d, 423 + dx, 215 + dy, 440 + dx, 214 + dy, 440 + dx, 245 + dy, 440 + dx, 245 + dy); // sh.curveTo(...)
-    bresenhamLine(chairG2d, 440 + dx, 245 + dy, 433 + dx, 457 + dy,2); // sh.lineTo(433+dx, 457+dy);
-    bresenhamLine(chairG2d, 433 + dx, 457 + dy, 355 + dx, 485 + dy,2); // sh.lineTo(355+dx, 485+dy);
-    bresenhamLine(chairG2d, 355 + dx, 485 + dy, 146 + dx, 451 + dy,2); // sh.lineTo(146+dx, 451+dy);
-    bresenhamLine(chairG2d, 146 + dx, 451 + dy, 139 + dx, 354 + dy,2); // sh.lineTo(139+dx, 354+dy);
-    bezierCurve(chairG2d, 139 + dx, 354 + dy, 135 + dx, 330 + dy, 207 + dx, 306 + dy, 207 + dx, 306 + dy); // sh.curveTo(...)
-    bezierCurve(chairG2d, 207 + dx, 306 + dy, 209 + dx, 200 + dy, 248 + dx, 200 + dy, 248 + dx, 200 + dy); // sh.curveTo(...)
-
-    // ปิดการใช้งาน Graphics2D เพื่อให้การวาดถูกบันทึกลงใน BufferedImage
-    //chairG2d.dispose();
-
-    // เติมสีภายในรูปทรงเก้าอี้ที่วาดไว้
-    // กำหนดสีเป้าหมายเป็นสีของพื้นหลัง (ซึ่งเป็นสีดำตามค่าเริ่มต้นของ BufferedImage)
-    // กำหนดสีที่จะเติมเป็นสีเทาอ่อน
-    floodFill(chairImage, 300 + dx, 300 + dy, Color.BLACK, new Color(210, 210, 210));
+    // เพิ่มจุดจากเส้นตรงและเส้นโค้ง Bezier ลงใน Polygon
+    addBresenhamLinePointsToPolygon(chairPolygon, 248 + dx, 200 + dy, 423 + dx, 215 + dy);
+    addBezierPointsToPolygon(chairPolygon, 423 + dx, 215 + dy, 440 + dx, 214 + dy, 440 + dx, 245 + dy, 440 + dx, 245 + dy);
+    addBresenhamLinePointsToPolygon(chairPolygon, 440 + dx, 245 + dy, 433 + dx, 457 + dy);
+    addBresenhamLinePointsToPolygon(chairPolygon, 433 + dx, 457 + dy, 355 + dx, 485 + dy);
+    addBresenhamLinePointsToPolygon(chairPolygon, 355 + dx, 485 + dy, 146 + dx, 451 + dy);
+    addBresenhamLinePointsToPolygon(chairPolygon, 146 + dx, 451 + dy, 139 + dx, 354 + dy);
+    addBezierPointsToPolygon(chairPolygon, 139 + dx, 354 + dy, 135 + dx, 330 + dy, 207 + dx, 306 + dy, 207 + dx, 306 + dy);
+    addBezierPointsToPolygon(chairPolygon, 207 + dx, 306 + dy, 209 + dx, 200 + dy, 248 + dx, 200 + dy, 248 + dx, 200 + dy);
     
-    // วาดรูปภาพที่เติมสีแล้วลงบนหน้าจอหลัก
-    g2d.drawImage(chairImage, 0, 0, null);
+    // เติมสี Polygon
+    g2d.setColor(new Color(210, 210, 210));
+    g2d.fillPolygon(chairPolygon);
+
+    // วาดเส้นขอบ
+    g2d.setColor(Color.BLACK);
+    g2d.drawPolygon(chairPolygon);
 
     // วาดเส้นส่วนประกอบอื่นๆ ที่ไม่ได้เป็นส่วนหนึ่งของรูปทรงหลัก
-    g2d.setColor(Color.BLACK);
     g2d.drawLine(139 + dx, 354 + dy, 351 + dx, 388 + dy);
     g2d.drawLine(351 + dx, 388 + dy, 355 + dx, 485 + dy);
     bezierCurve(g2d, 351 + dx, 388 + dy, 340 + dx, 368 + dy, 394 + dx, 333 + dy, 394 + dx, 333 + dy);
@@ -516,70 +511,30 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
     bezierCurve(g2d, 423 + dx, 215 + dy, 385 + dx, 197 + dy, 393 + dx, 325 + dy, 393 + dx, 325 + dy);
     g2d.drawLine(393 + dx, 325 + dy, 402 + dx, 468 + dy);
 }
-    public void drawhair2(Graphics2D g2d){
-    int dx = -40; // ลดแกน X ลง 50
-    int dy = 100;  // เพิ่มแกน Y ขึ้น 70
-
-    GeneralPath hairPath = new GeneralPath();
-    hairPath.moveTo(293 + dx, 224 + dy);
-    hairPath.curveTo(285 + dx,171 + dy, 291 + dx,156 + dy, 323 + dx,130 + dy);
-    hairPath.curveTo(355 + dx,105 + dy, 411 + dx,118 + dy, 430 + dx,163 + dy);
-    hairPath.curveTo(449 + dx,209 + dy, 411 + dx,253 + dy, 448 + dx,287 + dy);
-    hairPath.curveTo(484 + dx,322 + dy, 434 + dx,323 + dy, 455 + dx,334 + dy);
-    hairPath.curveTo(474 + dx,346 + dy, 309 + dx,343 + dy, 286 + dx,334 + dy);
-    hairPath.curveTo(263 + dx,323 + dy, 293 + dx,325 + dy, 283 + dx,313 + dy);
-    hairPath.curveTo(269 + dx,295 + dy, 305 + dx,287 + dy, 293 + dx,224 + dy);
-    hairPath.closePath();
-   
-    g2d.setColor(new Color(238, 157, 236)); // สีชมพู
-    g2d.fill(hairPath);
-    g2d.setColor(Color.BLACK);
-    g2d.draw(hairPath);
-     
-}public void drawhair(Graphics2D g2d){
-    int dx = -40; 
+    
+public void drawhair(Graphics2D g2d) {
+    int dx = -40;
     int dy = 100;
 
-    int width = 600, height = 600; // กำหนดขนาดตามที่โปรแกรมหลักใช้
-    BufferedImage hairImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-    Graphics2D hairG2d = hairImage.createGraphics();
-    hairG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    // สร้าง Polygon
+    Polygon hairPolygon = new Polygon();
 
-    // วาดเส้นขอบของผมด้วยสีดำเพื่อให้ floodFill สามารถเติมสีได้
-    hairG2d.setColor(Color.BLACK);
+    // เพิ่มจุดจากเส้นโค้ง Bezier ลงใน Polygon
+    addBezierPointsToPolygon(hairPolygon, 293 + dx, 224 + dy, 285 + dx, 171 + dy, 291 + dx, 156 + dy, 323 + dx, 130 + dy);
+    addBezierPointsToPolygon(hairPolygon, 323 + dx, 130 + dy, 355 + dx, 105 + dy, 411 + dx, 118 + dy, 430 + dx, 163 + dy);
+    addBezierPointsToPolygon(hairPolygon, 430 + dx, 163 + dy, 449 + dx, 209 + dy, 411 + dx, 253 + dy, 448 + dx, 287 + dy);
+    addBezierPointsToPolygon(hairPolygon, 448 + dx, 287 + dy, 484 + dx, 322 + dy, 434 + dx, 323 + dy, 455 + dx, 334 + dy);
+    addBezierPointsToPolygon(hairPolygon, 455 + dx, 334 + dy, 474 + dx, 346 + dy, 309 + dx, 343 + dy, 286 + dx, 334 + dy);
+    addBezierPointsToPolygon(hairPolygon, 286 + dx, 334 + dy, 263 + dx, 323 + dy, 293 + dx, 325 + dy, 283 + dx, 313 + dy);
+    addBezierPointsToPolygon(hairPolygon, 283 + dx, 313 + dy, 269 + dx, 295 + dy, 305 + dx, 287 + dy, 293 + dx, 224 + dy);
 
-    // วาดรูปทรงผมด้วย bezierCurve
-    // เส้นที่ 1
-    bezierCurve(hairG2d, 293+dx, 224+dy, 285+dx, 171+dy, 291+dx, 156+dy, 323+dx, 130+dy);
-    // เส้นที่ 2
-    bezierCurve(hairG2d, 323+dx, 130+dy, 355+dx, 105+dy, 411+dx, 118+dy, 430+dx, 163+dy);
-    // เส้นที่ 3
-    bezierCurve(hairG2d, 430+dx, 163+dy, 449+dx, 209+dy, 411+dx, 253+dy, 448+dx, 287+dy);
-    // เส้นที่ 4
-    bezierCurve(hairG2d, 448+dx, 287+dy, 484+dx, 322+dy, 434+dx, 323+dy, 455+dx, 334+dy);
-    // เส้นที่ 5
-    bezierCurve(hairG2d, 455+dx, 334+dy, 474+dx, 346+dy, 309+dx, 343+dy, 286+dx, 334+dy);
-    // เส้นที่ 6
-    bezierCurve(hairG2d, 286+dx, 334+dy, 263+dx, 323+dy, 293+dx, 325+dy, 283+dx, 313+dy);
-    // เส้นที่ 7
-    bezierCurve(hairG2d, 283+dx, 313+dy, 269+dx, 295+dy, 305+dx, 287+dy, 293+dx, 224+dy);
+    // เติมสี Polygon
+    g2d.setColor(new Color(238, 157, 236)); // สีชมพู
+    g2d.fillPolygon(hairPolygon);
 
-    // ปิดการใช้งาน Graphics2D เพื่อให้การวาดถูกบันทึกลงใน BufferedImage
-    hairG2d.dispose();
-
-    // เติมสีภายในรูปทรงผมที่วาดไว้
-    // targetColor คือสีของพื้นหลัง (สีดำ)
-    // replacementColor คือสีชมพู
-    floodFill(hairImage, 350 + dx, 250 + dy, Color.BLACK, new Color(238, 157, 236));
-    
-    // วาดรูปภาพที่เติมสีแล้วลงบนหน้าจอหลัก
-    g2d.drawImage(hairImage, 0, 0, null);
-    
-    // วาดเส้นขอบอีกครั้ง เพื่อให้เส้นขอบคมชัดแม้ถูกเติมสีแล้ว
-    // (สามารถเลือกที่จะวาดหรือไม่วาดก็ได้)
+    // วาดเส้นขอบ (ถ้าต้องการ)
     g2d.setColor(Color.BLACK);
-    // วาดเส้น bezierCurve และ drawLine ตามโค้ดเดิมซ้ำอีกครั้ง
-    // ...
+    g2d.drawPolygon(hairPolygon);
 }
     public void drawbang(Graphics2D g2d){
     int dx = -40;
@@ -599,71 +554,74 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
     public void drawShirt(Graphics2D g2d){
        int dx = 10;
        int dy = 170;
-      
-       GeneralPath shirt = new GeneralPath();
-       shirt.moveTo(336+dx,178+dy);
-       shirt.curveTo(336+dx, 178+dy, 318+dx, 192+dy, 299+dx, 182+dy);
-         shirt.curveTo(278+dx, 172+dy, 240+dx, 261+dy, 244+dx, 275+dy);
-        shirt.curveTo(244+dx, 275+dy, 223+dx, 291+dy, 215+dx, 306+dy);
-        shirt.curveTo(215+dx, 306+dy, 237+dx, 282+dy, 256+dx, 310+dy);
-        shirt.curveTo(256+dx, 310+dy, 292+dx, 281+dy, 294+dx, 335+dy);
-        shirt.curveTo(294+dx, 335+dy, 373+dx, 329+dy, 377+dx, 302+dy);
-        shirt.curveTo(381+dx, 275+dy, 379+dx, 220+dy, 336+dx, 178+dy);
-            g2d.setColor(new Color(131,192,231)); // สีน้ำเงิน
-      
-       g2d.fill(shirt);
-       g2d.setColor(Color.BLACK);
-       g2d.draw(shirt);
-       
-        
+        Polygon shirtPolygon = new Polygon();
+    //    GeneralPath shirt = new GeneralPath();
+    //    shirt.moveTo(336+dx,178+dy);
+    //    shirt.curveTo(336+dx, 178+dy, 318+dx, 192+dy, 299+dx, 182+dy);
+    //      shirt.curveTo(278+dx, 172+dy, 240+dx, 261+dy, 244+dx, 275+dy);
+    //     shirt.curveTo(244+dx, 275+dy, 223+dx, 291+dy, 215+dx, 306+dy);
+    //     shirt.curveTo(215+dx, 306+dy, 237+dx, 282+dy, 256+dx, 310+dy);
+    //     shirt.curveTo(256+dx, 310+dy, 292+dx, 281+dy, 294+dx, 335+dy);
+    //     shirt.curveTo(294+dx, 335+dy, 373+dx, 329+dy, 377+dx, 302+dy);
+    //     shirt.curveTo(381+dx, 275+dy, 379+dx, 220+dy, 336+dx, 178+dy);
+    //         g2d.setColor(new Color(131,192,231)); // สีน้ำเงิน
+            // เพิ่มจุดจากเส้นโค้ง Bezier ลงใน Polygon
+    addBezierPointsToPolygon(shirtPolygon, 336 + dx, 178 + dy, 318 + dx, 192 + dy, 299 + dx, 182 + dy, 299 + dx, 182 + dy);
+    addBezierPointsToPolygon(shirtPolygon, 299 + dx, 182 + dy,278 + dx, 172 + dy, 240 + dx, 261 + dy, 244 + dx, 275 + dy);
+    addBezierPointsToPolygon(shirtPolygon, 244 + dx, 275 + dy, 223+dx, 291+dy, 215+dx, 306+dy,215+dx, 306+dy);
+    addBezierPointsToPolygon(shirtPolygon, 215+dx, 306+dy,237+dx, 282+dy, 256+dx, 310+dy,256+dx, 310+dy);
+    addBezierPointsToPolygon(shirtPolygon, 256+dx, 310+dy,292+dx, 281+dy, 294+dx, 335+dy, 294+dx, 335+dy);
+    addBezierPointsToPolygon(shirtPolygon,294+dx, 335+dy, 373+dx, 329+dy, 377+dx, 302+dy, 377+dx, 302+dy);
+    addBezierPointsToPolygon(shirtPolygon, 377+dx, 302+dy,381+dx, 275+dy, 379+dx, 220+dy, 336+dx, 178+dy);
 
-        g2d.setColor(Color.BLACK);
-        bezierCurve(g2d, 329+dx, 227+dy, 330+dx, 271+dy, 323+dx, 277+dy, 323+dx, 277+dy);
-        bezierCurve(g2d, 323+dx, 277+dy, 270+dx, 293+dy, 256+dx, 310+dy, 256+dx, 310+dy);
-        bezierCurve(g2d, 281+dx, 224+dy, 262+dx, 249+dy, 256+dx, 310+dy, 256+dx, 310+dy);
+
+      // เติมสี Polygon
+    g2d.setColor(new Color(131, 192, 231)); // สีน้ำเงิน
+    g2d.fillPolygon(shirtPolygon);
+
+    // วาดเส้นขอบ
+    g2d.setColor(Color.BLACK);
+    g2d.drawPolygon(shirtPolygon);
+
+    // วาดรายละเอียดเพิ่มเติม (ถ้าต้องการ)
+    g2d.setColor(Color.BLACK);
+    bezierCurve(g2d, 329 + dx, 227 + dy, 330 + dx, 271 + dy, 323 + dx, 277 + dy, 323 + dx, 277 + dy);
+    bezierCurve(g2d, 323 + dx, 277 + dy, 270 + dx, 293 + dy, 256 + dx, 310 + dy, 256 + dx, 310 + dy);
+    bezierCurve(g2d, 281 + dx, 224 + dy, 262 + dx, 249 + dy, 256 + dx, 310 + dy, 256 + dx, 310 + dy);
        
         
     }
     private void drawBone(Graphics2D g2d) {
         int dx = 94;
         int dy = 170;
+// Bone3
+    Polygon bone3Polygon = new Polygon();
+    addBezierPointsToPolygon(bone3Polygon, 250 + dx, 132 + dy, 262 + dx, 145 + dy, 248 + dx, 157 + dy, 189 + dx, 159 + dy);
+    addBezierPointsToPolygon(bone3Polygon, 189 + dx, 159 + dy, 201 + dx, 148 + dy, 190 + dx, 137 + dy, 250 + dx, 132 + dy);
+    g2d.setColor(new Color(74, 68, 70));
+    g2d.fillPolygon(bone3Polygon);
 
-        GeneralPath bone3 = new GeneralPath();
-        bone3.moveTo(250+dx, 132+dy);
-        bone3.curveTo(250+dx, 132+dy, 262+dx, 145+dy, 248+dx, 157+dy);
-        bone3.lineTo(189+dx, 159+dy);
-        bone3.curveTo(189+dx, 157+dy, 201+dx, 148+dy, 190+dx, 137+dy);
-        bone3.lineTo(250+dx, 132+dy);
-        g2d.setColor(new Color(74,68,70));
-        g2d.fill(bone3);
-
-        GeneralPath bone = new GeneralPath();
-        bone.moveTo(174+dx, 130+dy);
-        bone.curveTo(174+dx, 130+dy, 152+dx, 102+dy, 175+dx, 72+dy);
-        bone.curveTo(198+dx, 40+dy, 269+dx, 46+dy, 285+dx, 77+dy);
-        bone.curveTo(299+dx, 109+dy, 297+dx, 153+dy, 258+dx, 156+dy);
-        bone.curveTo(258+dx, 156+dy, 267+dx, 179+dy, 216+dx, 175+dy);
-        bone.curveTo(216+dx, 175+dy, 183+dx, 177+dy, 189+dx, 162+dy);
-        bone.curveTo(189+dx, 162+dy, 182+dx, 153+dy, 194+dx, 153+dy);
-        bone.curveTo(194+dx, 153+dy, 202+dx, 152+dy, 199+dx, 162+dy);
-        bone.curveTo(199+dx, 162+dy, 199+dx, 153+dy, 207+dx, 153+dy);
-        bone.curveTo(207+dx, 153+dy, 214+dx, 152+dy, 213+dx, 163+dy);
-        bone.curveTo(213+dx, 163+dy, 213+dx, 151+dy, 221+dx, 153+dy);
-        bone.curveTo(221+dx, 153+dy, 227+dx, 154+dy, 226+dx, 162+dy);
-        bone.curveTo(226+dx, 162+dy, 228+dx, 142+dy, 241+dx, 158+dy);
-        bone.curveTo(242+dx, 159+dy, 263+dx, 146+dy, 241+dx, 132+dy);
-        bone.curveTo(241+dx, 132+dy, 238+dx, 138+dy, 239+dx, 144+dy);
-        bone.curveTo(239+dx, 144+dy, 225+dx, 156+dy, 225+dx, 137+dy);
-        bone.curveTo(225+dx, 137+dy, 218+dx, 158+dy, 210+dx, 138+dy);
-        bone.curveTo(210+dx, 138+dy, 207+dx, 159+dy, 199+dx, 138+dy);
-        bone.curveTo(199+dx, 138+dy, 193+dx, 159+dy, 188+dx, 139+dy);
-        bone.curveTo(188+dx, 139+dy, 190+dx, 150+dy, 180+dx, 148+dy);
-        bone.curveTo(180+dx, 148+dy, 172+dx, 145+dy, 174+dx, 130+dy);
-
-        g2d.setColor(Color.WHITE);
-        g2d.fill(bone);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(bone);
+    // Bone
+    Polygon bonePolygon = new Polygon();
+    addBezierPointsToPolygon(bonePolygon, 174 + dx, 130 + dy, 152 + dx, 102 + dy, 175 + dx, 72 + dy, 198 + dx, 40 + dy);
+    addBezierPointsToPolygon(bonePolygon, 198 + dx, 40 + dy, 269 + dx, 46 + dy, 285 + dx, 77 + dy, 299 + dx, 109 + dy);
+    addBezierPointsToPolygon(bonePolygon, 299 + dx, 109 + dy, 297 + dx, 153 + dy, 258 + dx, 156 + dy, 267 + dx, 179 + dy);
+    addBezierPointsToPolygon(bonePolygon, 267 + dx, 179 + dy, 216 + dx, 175 + dy, 183 + dx, 177 + dy, 189 + dx, 162 + dy);
+    addBezierPointsToPolygon(bonePolygon, 189 + dx, 162 + dy, 182 + dx, 153 + dy, 194 + dx, 153 + dy, 202 + dx, 152 + dy);
+    addBezierPointsToPolygon(bonePolygon, 202 + dx, 152 + dy, 199 + dx, 162 + dy, 199 + dx, 153 + dy, 207 + dx, 153 + dy);
+    addBezierPointsToPolygon(bonePolygon, 207 + dx, 153 + dy, 214 + dx, 152 + dy, 213 + dx, 163 + dy, 213 + dx, 151 + dy);
+    addBezierPointsToPolygon(bonePolygon, 213 + dx, 151 + dy, 221 + dx, 153 + dy, 227 + dx, 154 + dy, 226 + dx, 162 + dy);
+    addBezierPointsToPolygon(bonePolygon, 226 + dx, 162 + dy, 228 + dx, 142 + dy, 241 + dx, 158 + dy, 242 + dx, 159 + dy);
+    addBezierPointsToPolygon(bonePolygon, 242 + dx, 159 + dy, 263 + dx, 146 + dy, 241 + dx, 132 + dy, 238 + dx, 138 + dy);
+    addBezierPointsToPolygon(bonePolygon, 238 + dx, 138 + dy, 239 + dx, 144 + dy, 225 + dx, 156 + dy, 225 + dx, 137 + dy);
+    addBezierPointsToPolygon(bonePolygon, 225 + dx, 137 + dy, 218 + dx, 158 + dy, 210 + dx, 138 + dy, 207 + dx, 159 + dy);
+    addBezierPointsToPolygon(bonePolygon, 207 + dx, 159 + dy, 199 + dx, 138 + dy, 193 + dx, 159 + dy, 188 + dx, 139 + dy);
+    addBezierPointsToPolygon(bonePolygon, 188 + dx, 139 + dy, 190 + dx, 150 + dy, 180 + dx, 148 + dy, 172 + dx, 145 + dy);
+    addBezierPointsToPolygon(bonePolygon, 172 + dx, 145 + dy, 174 + dx, 130 + dy, 174 + dx, 130 + dy, 174 + dx, 130 + dy);
+    g2d.setColor(Color.WHITE);
+    g2d.fillPolygon(bonePolygon);
+    g2d.setColor(Color.BLACK);
+    g2d.drawPolygon(bonePolygon);
 
         g2d.setColor(new Color(74,68,70));
         g2d.fillOval(171+dx, 95+dy, 20, 26);
@@ -751,8 +709,8 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
         pant.moveTo(337+dx,276+dy);
         pant.curveTo(363+dx,310+dy, 380+dx,317+dy,288+dx,386+dy);
         pant.lineTo(287+dx,455+dy);
-    pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
-    pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
+        pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
+        pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
         pant.curveTo(199+dx,451+dy,174+dx,350+dy,206+dx,331+dy);
         pant.curveTo(206+dx,331+dy,238+dx,282+dy,250+dx,276+dy);
         pant.lineTo(337+dx,276+dy);
@@ -963,9 +921,57 @@ private BufferedImage canvas; // BufferedImage สำหรับวาดทุ
             double yt = Math.pow(1-t, 3)*y1 + 3*t*Math.pow(1-t,2)*y2+ 3*Math.pow(t, 2)*(1-t)*y3+ Math.pow(t,3)*y4; 
             plot(g, (int)Math.round(xt), (int)Math.round(yt), 2);
         } 
-        }
+    }
+    private void addBezierPointsToPolygon(Polygon polygon, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
+    for (int i = 0; i < 3000; i++) {
+        double t = i / (double) (2999);
+        double xt = Math.pow(1 - t, 3) * x1 + 3 * t * Math.pow(1 - t, 2) * x2 + 3 * Math.pow(t, 2) * (1 - t) * x3 + Math.pow(t, 3) * x4;
+        double yt = Math.pow(1 - t, 3) * y1 + 3 * t * Math.pow(1 - t, 2) * y2 + 3 * Math.pow(t, 2) * (1 - t) * y3 + Math.pow(t, 3) * y4;
+        polygon.addPoint((int) Math.round(xt), (int) Math.round(yt));
+    }
+}
+    // ฟังก์ชันเพิ่มจุดจากเส้นตรง Bresenham ลงใน Polygon
+private void addBresenhamLinePointsToPolygon(Polygon polygon, int x1, int y1, int x2, int y2) {
+    int dx = Math.abs(x2 - x1);
+    int dy = Math.abs(y2 - y1);
+    int sx = (x1 < x2) ? 1 : -1;
+    int sy = (y1 < y2) ? 1 : -1;
+    boolean isSwap = false;
+
+    if (dy > dx) {
+        int temp = dx;
+        dx = dy;
+        dy = temp;
+        isSwap = true;
+    }
+
+    int D = 2 * dy - dx;
+    int x = x1;
+    int y = y1;
     
-            private static void plot(Graphics g, int x, int y, int size){
+    for (int i = 0; i <= dx; i++) {
+        polygon.addPoint(x, y);
+
+        if (D >= 0) {
+            if (isSwap)
+                x += sx;
+            else
+                y += sy;
+
+            D -= 2 * dx;
+        }
+
+        if (isSwap)
+            y += sy;
+        else
+            x += sx;
+
+        D += 2 * dy;
+    }
+
+}
+    
+    private static void plot(Graphics g, int x, int y, int size){
     g.fillRect(x, y, size, size); // ทำให้ pixel ใหญ่ขึ้น
 }
       public  static BufferedImage floodFill(BufferedImage image, int x, int y, Color targetColor,Color replacementColor) {
