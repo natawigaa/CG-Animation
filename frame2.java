@@ -1,6 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.geom.GeneralPath;
+
 import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -540,13 +540,13 @@ public void drawhair(Graphics2D g2d) {
     int dx = -40;
     int dy =100;
     int x=10;
-   GeneralPath bang  = new GeneralPath();
-   bang.moveTo(341+dx, 144+dy);
-   bang.curveTo(341+dx,144+dy,298+dx,191+dy,385+dx,191+dy);
-   bang.curveTo(471+dx,191+dy,374+dx,111+dy,341+dx,144+dy);
-    
-   g2d.setColor(new Color(238, 157, 236)); // สีชมพู
-   g2d.fill(bang);
+   
+   Polygon bangPolygon = new Polygon();
+   addBezierPointsToPolygon(bangPolygon,341+dx,144+dy,298+dx,191+dy,385+dx,191+dy,385+dx,191+dy);
+   addBezierPointsToPolygon(bangPolygon, 385+dx, 191+dy, 471+dx,191+dy,374+dx,111+dy,341+dx,144+dy);
+   // เติมสี Polygon
+g2d.setColor(new Color(238, 157, 236)); // สีชมพู
+g2d.fillPolygon(bangPolygon);
    g2d.setColor(Color.BLACK);
    bezierCurve(g2d, 288+x,250, 250+x,303, 360+x,288, 360+x,288);
 }
@@ -555,17 +555,7 @@ public void drawhair(Graphics2D g2d) {
        int dx = 10;
        int dy = 170;
         Polygon shirtPolygon = new Polygon();
-    //    GeneralPath shirt = new GeneralPath();
-    //    shirt.moveTo(336+dx,178+dy);
-    //    shirt.curveTo(336+dx, 178+dy, 318+dx, 192+dy, 299+dx, 182+dy);
-    //      shirt.curveTo(278+dx, 172+dy, 240+dx, 261+dy, 244+dx, 275+dy);
-    //     shirt.curveTo(244+dx, 275+dy, 223+dx, 291+dy, 215+dx, 306+dy);
-    //     shirt.curveTo(215+dx, 306+dy, 237+dx, 282+dy, 256+dx, 310+dy);
-    //     shirt.curveTo(256+dx, 310+dy, 292+dx, 281+dy, 294+dx, 335+dy);
-    //     shirt.curveTo(294+dx, 335+dy, 373+dx, 329+dy, 377+dx, 302+dy);
-    //     shirt.curveTo(381+dx, 275+dy, 379+dx, 220+dy, 336+dx, 178+dy);
-    //         g2d.setColor(new Color(131,192,231)); // สีน้ำเงิน
-            // เพิ่มจุดจากเส้นโค้ง Bezier ลงใน Polygon
+ 
     addBezierPointsToPolygon(shirtPolygon, 336 + dx, 178 + dy, 318 + dx, 192 + dy, 299 + dx, 182 + dy, 299 + dx, 182 + dy);
     addBezierPointsToPolygon(shirtPolygon, 299 + dx, 182 + dy,278 + dx, 172 + dy, 240 + dx, 261 + dy, 244 + dx, 275 + dy);
     addBezierPointsToPolygon(shirtPolygon, 244 + dx, 275 + dy, 223+dx, 291+dy, 215+dx, 306+dy,215+dx, 306+dy);
@@ -596,27 +586,33 @@ public void drawhair(Graphics2D g2d) {
         int dy = 170;
 // Bone3
     Polygon bone3Polygon = new Polygon();
-    addBezierPointsToPolygon(bone3Polygon, 250 + dx, 132 + dy, 262 + dx, 145 + dy, 248 + dx, 157 + dy, 189 + dx, 159 + dy);
-    addBezierPointsToPolygon(bone3Polygon, 189 + dx, 159 + dy, 201 + dx, 148 + dy, 190 + dx, 137 + dy, 250 + dx, 132 + dy);
+    addBezierPointsToPolygon(bone3Polygon, 250 + dx, 132 + dy+5, 262 + dx, 145 + dy+5, 248 + dx, 157 + dy+5, 189 + dx, 159 + dy+5);
+    addBezierPointsToPolygon(bone3Polygon, 189 + dx, 159 + dy+5, 201 + dx, 148 + dy+5, 190 + dx, 137 + dy+5, 250 + dx, 132 + dy+5);
     g2d.setColor(new Color(74, 68, 70));
     g2d.fillPolygon(bone3Polygon);
 
     // Bone
     Polygon bonePolygon = new Polygon();
-    addBezierPointsToPolygon(bonePolygon, 174 + dx, 130 + dy, 152 + dx, 102 + dy, 175 + dx, 72 + dy, 198 + dx, 40 + dy);
-    addBezierPointsToPolygon(bonePolygon, 198 + dx, 40 + dy, 269 + dx, 46 + dy, 285 + dx, 77 + dy, 299 + dx, 109 + dy);
-    addBezierPointsToPolygon(bonePolygon, 299 + dx, 109 + dy, 297 + dx, 153 + dy, 258 + dx, 156 + dy, 267 + dx, 179 + dy);
-    addBezierPointsToPolygon(bonePolygon, 267 + dx, 179 + dy, 216 + dx, 175 + dy, 183 + dx, 177 + dy, 189 + dx, 162 + dy);
-    addBezierPointsToPolygon(bonePolygon, 189 + dx, 162 + dy, 182 + dx, 153 + dy, 194 + dx, 153 + dy, 202 + dx, 152 + dy);
-    addBezierPointsToPolygon(bonePolygon, 202 + dx, 152 + dy, 199 + dx, 162 + dy, 199 + dx, 153 + dy, 207 + dx, 153 + dy);
-    addBezierPointsToPolygon(bonePolygon, 207 + dx, 153 + dy, 214 + dx, 152 + dy, 213 + dx, 163 + dy, 213 + dx, 151 + dy);
-    addBezierPointsToPolygon(bonePolygon, 213 + dx, 151 + dy, 221 + dx, 153 + dy, 227 + dx, 154 + dy, 226 + dx, 162 + dy);
-    addBezierPointsToPolygon(bonePolygon, 226 + dx, 162 + dy, 228 + dx, 142 + dy, 241 + dx, 158 + dy, 242 + dx, 159 + dy);
-    addBezierPointsToPolygon(bonePolygon, 242 + dx, 159 + dy, 263 + dx, 146 + dy, 241 + dx, 132 + dy, 238 + dx, 138 + dy);
-    addBezierPointsToPolygon(bonePolygon, 238 + dx, 138 + dy, 239 + dx, 144 + dy, 225 + dx, 156 + dy, 225 + dx, 137 + dy);
-    addBezierPointsToPolygon(bonePolygon, 225 + dx, 137 + dy, 218 + dx, 158 + dy, 210 + dx, 138 + dy, 207 + dx, 159 + dy);
-    addBezierPointsToPolygon(bonePolygon, 207 + dx, 159 + dy, 199 + dx, 138 + dy, 193 + dx, 159 + dy, 188 + dx, 139 + dy);
-    addBezierPointsToPolygon(bonePolygon, 188 + dx, 139 + dy, 190 + dx, 150 + dy, 180 + dx, 148 + dy, 172 + dx, 145 + dy);
+    addBezierPointsToPolygon(bonePolygon, 174 + dx, 130 + dy, 152 + dx, 102 + dy, 175 + dx, 72 + dy, 175 + dx, 72 + dy);
+    addBezierPointsToPolygon(bonePolygon, 175 + dx, 72 + dy, 198+dx, 40+dy, 269+dx, 46+dy, 285+dx, 77+dy);
+    addBezierPointsToPolygon(bonePolygon, 285+dx, 77+dy, 299+dx, 109+dy, 297+dx, 153+dy, 258+dx, 156+dy);
+    addBezierPointsToPolygon(bonePolygon, 258+dx, 156+dy,267+dx, 179+dy, 216+dx, 175+dy, 216+dx, 175+dy);
+    addBezierPointsToPolygon(bonePolygon, 216+dx, 175+dy, 183+dx, 177+dy, 189+dx, 162+dy, 189+dx, 162+dy);
+    addBezierPointsToPolygon(bonePolygon, 189+dx, 162+dy, 182+dx, 153+dy, 194+dx, 153+dy, 194+dx, 153+dy);
+    addBezierPointsToPolygon(bonePolygon,194+dx, 153+dy, 202+dx, 152+dy, 199+dx, 162+dy,199+dx, 162+dy);
+    addBezierPointsToPolygon(bonePolygon, 199+dx, 162+dy, 199+dx, 153+dy, 207+dx, 153+dy,207+dx, 153+dy);
+    addBezierPointsToPolygon(bonePolygon,207+dx, 153+dy,214+dx, 152+dy, 213+dx, 163+dy,213+dx, 163+dy);
+    addBezierPointsToPolygon(bonePolygon,213+dx, 163+dy,213+dx, 151+dy, 221+dx, 153+dy, 221+dx, 153+dy);
+    addBezierPointsToPolygon(bonePolygon, 221+dx, 153+dy, 227+dx, 154+dy, 226+dx, 162+dy,226+dx, 162+dy);
+    addBezierPointsToPolygon(bonePolygon, 226+dx, 162+dy,228+dx, 142+dy, 241+dx, 158+dy,241+dx, 158+dy);
+    addBezierPointsToPolygon(bonePolygon, 241+dx, 158+dy,242+dx, 159+dy, 263+dx, 146+dy, 241+dx, 132+dy);
+    addBezierPointsToPolygon(bonePolygon, 241+dx, 132+dy,238+dx, 138+dy, 239+dx, 144+dy,239+dx, 144+dy);
+    addBezierPointsToPolygon(bonePolygon, 239+dx, 144+dy,225+dx, 156+dy, 225+dx, 137+dy,225+dx, 137+dy);
+    addBezierPointsToPolygon(bonePolygon, 225+dx, 137+dy,218+dx, 158+dy, 210+dx, 138+dy,210+dx, 138+dy);
+    addBezierPointsToPolygon(bonePolygon, 210+dx, 138+dy,207+dx, 159+dy, 199+dx, 138+dy,199+dx, 138+dy);
+    addBezierPointsToPolygon(bonePolygon, 199+dx, 138+dy, 193+dx, 159+dy, 188+dx, 139+dy, 188+dx, 139+dy);
+    addBezierPointsToPolygon(bonePolygon, 188+dx, 139+dy, 190+dx, 150+dy, 180+dx, 148+dy, 180+dx, 148+dy);
+    addBezierPointsToPolygon(bonePolygon, 180+dx, 148+dy, 172+dx, 145+dy, 174+dx, 130+dy, 174+dx, 130+dy);
     addBezierPointsToPolygon(bonePolygon, 172 + dx, 145 + dy, 174 + dx, 130 + dy, 174 + dx, 130 + dy, 174 + dx, 130 + dy);
     g2d.setColor(Color.WHITE);
     g2d.fillPolygon(bonePolygon);
@@ -632,165 +628,170 @@ public void drawhair(Graphics2D g2d) {
 
         bezierCurve(g2d, 240+dx, 142+dy, 235+dx, 128+dy, 254+dx, 126+dy, 254+dx, 126+dy);
         bezierCurve(g2d, 261+dx, 124+dy, 273+dx, 122+dy, 271+dx, 108+dy, 271+dx, 108+dy);
-
-        GeneralPath bone2 = new GeneralPath();  
-        bone2.moveTo(200+dx, 126+dy);
-        bone2.curveTo(200+dx, 126+dy, 205+dx, 132+dy, 211+dx, 126+dy);
-        bone2.curveTo(211+dx, 126+dy, 209+dx, 116+dy, 201+dx, 114+dy);
-        bone2.curveTo(201+dx, 114+dy, 188+dx, 122+dy, 192+dx, 128+dy);
-        bone2.curveTo(192+dx, 128+dy, 193+dx, 132+dy, 200+dx, 126+dy);
-        g2d.setColor(new Color(74,68,70));
-        g2d.fill(bone2);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(bone2);  
+    
+    Polygon bone2Polygon = new Polygon();
+    addBezierPointsToPolygon(bone2Polygon, 200 + dx, 126 + dy, 205 + dx, 132 + dy, 211 + dx, 126 + dy,  211 + dx, 126 + dy);
+    addBezierPointsToPolygon(bone2Polygon,  211 + dx, 126 + dy,209+dx, 116+dy, 201+dx, 114+dy, 201+dx, 114+dy);
+    addBezierPointsToPolygon(bone2Polygon, 201+dx, 114+dy, 188+dx, 122+dy, 192+dx, 128+dy, 192+dx, 128+dy);
+    addBezierPointsToPolygon(bone2Polygon, 192+dx, 128+dy, 193+dx, 132+dy, 200+dx, 126+dy, 200+dx, 126+dy);
+    g2d.setColor(new Color(74, 68, 70));
+    g2d.fillPolygon(bone2Polygon);
+    g2d.setColor(Color.BLACK);
+    g2d.drawPolygon(bone2Polygon);
     }
     private void drawPieceDesk(Graphics2D g2d){
-         int y = -33;
-        int x = -15;
-        GeneralPath d = new GeneralPath();
-        d.moveTo(276+x, 473+y);
-        d.lineTo(308+x, 491+y);
-        d.curveTo(308+x, 491+y,285+x,499+y,270+x,511+y);
-        d.curveTo(270+x,511+y, 271+x,475+y, 276+x, 473+y);
-        g2d.setColor(new Color(153, 102, 51));
-        g2d.fill(d);
+        int y = -33;
+    int x = -15;
+    Polygon pieceDeskPolygon = new Polygon();
+    addBezierPointsToPolygon(pieceDeskPolygon, 276 + x, 473 + y, 308 + x, 491 + y, 285 + x, 499 + y, 270 + x, 511 + y);
+    addBezierPointsToPolygon(pieceDeskPolygon, 270 + x, 511 + y, 271 + x, 475 + y, 276 + x, 473 + y, 276 + x, 473 + y);
+    g2d.setColor(new Color(153, 102, 51));
+    g2d.fillPolygon(pieceDeskPolygon);
     }
     
     private void drawPants(Graphics2D g2d){
-        int dx = 20;
+      int dx = 20;
         int dy = 150;
-        GeneralPath pant  = new GeneralPath();
-        pant.moveTo(363+dx,320+dy);
-        pant.curveTo(363+dx,320+dy, 397+dx,401+dy,288+dx,386+dy);
-        pant.lineTo(287+dx,455+dy);
-        pant.curveTo(287+dx,455+dy,252+dx,476+dy,232+dx,458+dy);
-        pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
-        pant.curveTo(199+dx,451+dy,174+dx,352+dy,206+dx,331+dy);
-        pant.curveTo(237+dx,309+dy,251+dx,306+dy,268+dx,306+dy);
-        pant.lineTo(363+dx, 320+dy);
+
+        // Main pants shape
+        Polygon pantPolygon = new Polygon();
+        int currentX = 363 + dx;
+        int currentY = 320 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 397 + dx, 401 + dy, 288 + dx, 386 + dy, 287 + dx, 455 + dy);
+        currentX = 287 + dx;
+        currentY = 455 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 252 + dx, 476 + dy, 232 + dx, 458 + dy, 199 + dx, 451 + dy);
+        currentX = 199 + dx;
+        currentY = 451 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 174 + dx, 352 + dy, 206 + dx, 331 + dy, 237 + dx, 309 + dy);
+        currentX = 237 + dx;
+        currentY = 309 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, 309+dy,251+dx,306+dy,268+dx,306+dy,363+dx,320+dy);
+
         g2d.setColor(Color.BLACK);
-        g2d.draw(pant);
-        g2d.fill(pant);
-        GeneralPath p2 = new GeneralPath();
-        p2.moveTo(261+dx, 327+dy);
-        p2.curveTo(261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy);
-        p2.curveTo(219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
-        g2d.setColor(new Color(68,71,73));
-        g2d.draw(p2);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
+
+        // Smaller shape p2
+        Polygon p2Polygon = new Polygon();
+        currentX = 261 + dx;
+        currentY = 327 + dy;
+        addBezierPointsToPolygon(p2Polygon, currentX, currentY, 223 + dx, 324 + dy, 222 + dx, 359 + dy, 219 + dx, 392 + dy);
+        currentX = 219 + dx;
+        currentY = 392 + dy;
+        addBezierPointsToPolygon(p2Polygon, currentX, currentY, 225 + dx, 444 + dy, 232 + dx, 458 + dy, 232 + dx, 458 + dy);
+
+        g2d.setColor(new Color(68, 71, 73));
+        g2d.drawPolygon(p2Polygon);
     }
     
     private void drawPantsStanding1(Graphics2D g2d){
-        int dx = 20;
+       int dx = 20;
         int dy = 150; // ยกตัวขึ้นเล็กน้อย (จาก 150 -> 120)
-        GeneralPath pant  = new GeneralPath();
-        pant.moveTo(360+dx,300+dy);
-        pant.curveTo(360+dx,300+dy, 410+dx,355+dy,288+dx,386+dy); // ลดความโค้งลง
-        pant.lineTo(287+dx,455+dy);
-        pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
-        pant.curveTo(232+dx,458+dy,212+dx,460+dy,199+dx,451+dy);
-        pant.curveTo(199+dx,451+dy,174+dx,350+dy,206+dx,331+dy);
-        pant.curveTo(206+dx,331+dy,243+dx,297+dy,268+dx,296+dy);
-        pant.lineTo(360+dx, 300+dy);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(pant);
-        g2d.fill(pant);
 
-    GeneralPath p2 = new GeneralPath();
-            p2.moveTo(261+dx, 327+dy);
-            p2.curveTo(261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy);
-            p2.curveTo(219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
-            g2d.setColor(new Color(68,71,73));
-            g2d.draw(p2);
+        // Main pants shape
+        Polygon pantPolygon = new Polygon();
+        int currentX = 360 + dx;
+        int currentY = 300 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 410 + dx, 355 + dy, 288 + dx, 386 + dy, 287 + dx, 455 + dy);
+        currentX = 287 + dx;
+        currentY = 455 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 252 + dx, 470 + dy, 232 + dx, 458 + dy, 199 + dx, 451 + dy);
+        currentX = 199 + dx;
+        currentY = 451 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 174 + dx, 350 + dy, 206 + dx, 331 + dy, 268 + dx, 296 + dy);
+        currentX = 268 + dx;
+        currentY = 296 + dy;
+        addBezierPointsToPolygon(pantPolygon, currentX, currentY, 360 + dx, 300 + dy, 360 + dx, 300 + dy, 360 + dx, 300 + dy);
+
+        g2d.setColor(Color.BLACK);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
+
+        // Smaller shape p2
+        Polygon p2Polygon = new Polygon();
+        currentX = 261 + dx;
+        currentY = 327 + dy;
+        addBezierPointsToPolygon(p2Polygon, currentX, currentY, 223 + dx, 324 + dy, 222 + dx, 359 + dy, 232 + dx, 458 + dy);
+
+        g2d.setColor(new Color(68, 71, 73));
+        g2d.drawPolygon(p2Polygon);
     }
     private void drawPantsStanding2(Graphics2D g2d){
         int dx = 20;
         int dy = 150; // ยกขึ้นมากกว่าเดิม
-        GeneralPath pant  = new GeneralPath();
-        pant.moveTo(337+dx,276+dy);
-        pant.curveTo(363+dx,310+dy, 380+dx,317+dy,288+dx,386+dy);
-        pant.lineTo(287+dx,455+dy);
-        pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
-        pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
-        pant.curveTo(199+dx,451+dy,174+dx,350+dy,206+dx,331+dy);
-        pant.curveTo(206+dx,331+dy,238+dx,282+dy,250+dx,276+dy);
-        pant.lineTo(337+dx,276+dy);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(pant);
-        g2d.fill(pant);
+         Polygon pantPolygon = new Polygon();
+         addBezierPointsToPolygon(pantPolygon, 337+dx,276+dy,363+dx,310+dy, 380+dx,317+dy,288+dx,386+dy);
+         addBresenhamLinePointsToPolygon(pantPolygon,288+dx,386+dy, 287+dx,455+dy);
+         addBezierPointsToPolygon(pantPolygon, 287+dx,455+dy,252+dx,470+dy,232+dx,458+dy,232+dx,458+dy);
+         addBezierPointsToPolygon(pantPolygon, 232+dx,458+dy,212+dx,466+dy,199+dx,451+dy,199+dx,451+dy);
+         addBezierPointsToPolygon(pantPolygon, 199+dx,451+dy,174+dx,350+dy,206+dx,331+dy,206+dx,331+dy);
+         addBezierPointsToPolygon(pantPolygon, 206+dx,331+dy,238+dx,282+dy,250+dx,276+dy,250+dx,276+dy);
+         addBresenhamLinePointsToPolygon(pantPolygon,250+dx,276+dy,337+dx,276+dy);
+          g2d.setColor(Color.BLACK);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
 
-    GeneralPath p2 = new GeneralPath();
-            p2.moveTo(261+dx, 327+dy);
-            p2.curveTo(261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy);
-            p2.curveTo(219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
-            g2d.setColor(new Color(68,71,73));
-            g2d.draw(p2);
+
+
+        g2d.setColor(new Color(68,71,73));
+        bezierCurve(g2d, 261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy, 222+dx, 359+dy);
+        bezierCurve(g2d,222+dx, 359+dy,219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
     }
     private void drawPantsStanding3(Graphics2D g2d){
         int dx = 20;
         int dy = 150; // ยกเต็มที่
-        GeneralPath pant  = new GeneralPath();
-        pant.moveTo(315+dx,263+dy);
-        pant.curveTo(315+dx,263+dy, 347+dx,291+dy,283+dx,372+dy); // ขาตรงขึ้น
-        pant.lineTo(287+dx,455+dy);
-        pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
-    pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
-        pant.curveTo(189+dx,441+dy,185+dx,374+dy,190+dx,360+dy);
-        pant.curveTo(193+dx,346+dy,219+dx,276+dy,243+dx,263+dy);
-        pant.lineTo(315+dx, 263+dy);
+        Polygon pantPolygon = new Polygon();
+        addBezierPointsToPolygon(pantPolygon, 315+dx,263+dy, 347+dx,291+dy,283+dx,372+dy,283+dx,372+dy);
+        addBresenhamLinePointsToPolygon(pantPolygon, 283+dx,372+dy, 287+dx,455+dy);
+        addBezierPointsToPolygon(pantPolygon,287+dx,455+dy,252+dx,470+dy,232+dx,458+dy,232+dx,458+dy);
+        addBezierPointsToPolygon(pantPolygon, 232+dx,458+dy,212+dx,466+dy,199+dx,451+dy,199+dx,451+dy);
+        addBezierPointsToPolygon(pantPolygon, 199+dx,451+dy,189+dx,441+dy,185+dx,374+dy,190+dx,360+dy);
+        addBezierPointsToPolygon(pantPolygon, 190+dx,360+dy,193+dx,346+dy,219+dx,276+dy,243+dx,263+dy);
+        addBresenhamLinePointsToPolygon(pantPolygon,243+dx,263+dy,315+dx,263+dy);
         g2d.setColor(Color.BLACK);
-        g2d.draw(pant);
-        g2d.fill(pant);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
 
-        GeneralPath p2 = new GeneralPath();
-            p2.moveTo(261+dx, 327+dy);
-            p2.curveTo(261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy);
-            p2.curveTo(219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
-            g2d.setColor(new Color(68,71,73));
-            g2d.draw(p2);
+
+       bezierCurve(g2d, 261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy, 222+dx, 359+dy);
+        bezierCurve(g2d,222+dx, 359+dy,219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
     }
     private void drawPantsStanding4(Graphics2D g2d) {
         int dx = 20;
         int dy = 150; // ยกเต็มที่
-        GeneralPath pant  = new GeneralPath();
-        pant.moveTo(293+dx,260+dy);
-        pant.curveTo(293+dx,260+dy, 311+dx,290+dy,283+dx,372+dy);
-        pant.lineTo(287+dx,455+dy);
-        pant.curveTo(287+dx,455+dy,252+dx,470+dy,232+dx,458+dy);
-        pant.curveTo(232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
-        pant.curveTo(185+dx,437+dy,188+dx,364+dy,190+dx,348+dy);
-        pant.curveTo(195+dx,334+dy,202+dx,281+dy,221+dx,260+dy);
-        pant.lineTo(293+dx,260+dy);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(pant);
-        g2d.fill(pant);
+         Polygon pantPolygon = new Polygon();
+        addBezierPointsToPolygon(pantPolygon, 293+dx,260+dy, 311+dx,290+dy,283+dx,372+dy,283+dx,372+dy);
+        addBresenhamLinePointsToPolygon(pantPolygon,283+dx,372+dy,287+dx,455+dy);
+        addBezierPointsToPolygon(pantPolygon,287+dx,455+dy,252+dx,470+dy,232+dx,458+dy,232+dx,458+dy);
+        addBezierPointsToPolygon(pantPolygon,232+dx,458+dy,232+dx,458+dy,212+dx,466+dy,199+dx,451+dy);
+        addBezierPointsToPolygon(pantPolygon, 199+dx,451+dy,185+dx,437+dy,188+dx,364+dy,190+dx,348+dy);
+        addBezierPointsToPolygon(pantPolygon,190+dx,348+dy,195+dx,334+dy,202+dx,281+dy,221+dx,260+dy);
+        addBresenhamLinePointsToPolygon(pantPolygon,221+dx,260+dy,293+dx,260+dy);
+         g2d.setColor(Color.BLACK);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
 
-        GeneralPath p2 = new GeneralPath();
-        p2.moveTo(261+dx, 327+dy);
-        p2.curveTo(261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy);
-        p2.curveTo(219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
+
         g2d.setColor(new Color(68,71,73));
-        g2d.draw(p2);
-    }
+        bezierCurve(g2d, 261+dx, 327+dy, 223+dx, 324+dy, 222+dx, 359+dy, 222+dx, 359+dy);
+        bezierCurve(g2d,222+dx, 359+dy,219+dx, 392+dy, 225+dx, 444+dy, 232+dx, 458+dy);
+            }
     private void drawPantsStand5(Graphics2D g2d) {
      int dx = 20;
     int dy = 150; // ยกเต็มที่
-    GeneralPath pant  = new GeneralPath();
-    pant.moveTo(297+dx, 260+dy);
-    pant.curveTo(297+dx,260+dy,299+dx, 427+dy, 287+dx, 455+dy);
-    pant.curveTo(287+dx,455+dy,467+dx,472+dy,240+dx,457+dy);
-    pant.curveTo(240+dx,457+dy,215+dx,472+dy,199+dx,456+dy);
-    pant.curveTo(199+dx,456+dy,179+dx,288+dy,188+dx,261+dy);
-    pant.lineTo(297+dx, 260+dy);
-    g2d.setColor(Color.BLACK);
-    g2d.draw(pant);
-    g2d.fill(pant);
+     Polygon pantPolygon = new Polygon();
+     addBezierPointsToPolygon(pantPolygon,297+dx,260+dy,299+dx, 427+dy, 287+dx, 455+dy, 287+dx, 455+dy);
+     addBezierPointsToPolygon(pantPolygon, 287+dx, 455+dy,287+dx,455+dy,467+dx,472+dy,240+dx,457+dy);
+     addBezierPointsToPolygon(pantPolygon,240+dx,457+dy,240+dx,457+dy,215+dx,472+dy,199+dx,456+dy);
+     addBezierPointsToPolygon(pantPolygon,199+dx,456+dy,199+dx,456+dy,179+dx,288+dy,188+dx,261+dy);
+     addBresenhamLinePointsToPolygon(pantPolygon,188+dx,261+dy,297+dx,260+dy);
+   g2d.setColor(Color.BLACK);
+        g2d.drawPolygon(pantPolygon);
+        g2d.fillPolygon(pantPolygon);
 
-    GeneralPath p2 = new GeneralPath();
-    p2.moveTo(233+dx, 342+dy);
-    p2.curveTo(233+dx, 342+dy, 232+dx, 419+dy, 240+dx,457+dy);
-    
-    g2d.setColor(new Color(68,71,73));
-    g2d.draw(p2);
+   g2d.setColor(new Color(68,71,73));
+bezierCurve(g2d, 233+dx, 342+dy, 232+dx, 419+dy, 240+dx,457+dy, 240+dx,457+dy);
 
 }
     private void drawDesk(Graphics2D g2d){
@@ -845,7 +846,7 @@ public void drawhair(Graphics2D g2d) {
     g2d.setColor(new Color(200, 170, 120));
     g2d.fillOval(25, 397, 47, 12); // ฝาแก้ว (กว้างเท่าปากแก้ว polygon)
     g2d.setColor(Color.BLACK);
-    midpointElipse(g2d, 25+47/2, 397+12/2, 47/2, 12/2);
+    midpointElipse(g2d, 25+47/2, 397+12/2, 47/2, 12/2,Color.BLACK);
     //วาดหลอด
     g2d.setColor(new Color(0,0,0)); // สีเทาอ่อน
     g2d.setStroke(new BasicStroke(5)); // ความหนาหลอด
@@ -873,53 +874,54 @@ public void drawhair(Graphics2D g2d) {
     g2d.drawLine(90, 545, 105, 525);
 }
 
-    public void midpointElipse(Graphics g,int xc,int yc,int a,int b){
-        int x,y,d;
-        //region 1
-        x=0;
-        y=b;
-        d=Math.round(b*b-a*a*b+a*a/4);
-        
-        while(b*b*x <= a*a*y){
-            plot(g,x+xc,y+yc,2);
-            plot(g,-x+xc,y+yc,2);
-            plot(g,x+xc,-y+yc,2);
-            plot(g,-x+xc,-y+yc,2);
+    public void midpointElipse(Graphics g, int xc, int yc, int a, int b, Color color) {
+    int x = 0, y = b;
+    int aSq = a * a, bSq = b * b;
+    int d = Math.round(bSq - aSq * b + aSq / 4f);
 
-            x++;
+    while (bSq * x <= aSq * y) {
+        plot(g, x + xc, y + yc, 2, color);
+        plot(g, -x + xc, y + yc, 2, color);
+        plot(g, x + xc, -y + yc, 2, color);
+        plot(g, -x + xc, -y + yc, 2, color);
 
-            if(d>=0){
-                y--;
-                d= d-2*a*a*y;
-            }
-            d=d+2*b*b*x+ b*b;
+        x++;
+        if (d >= 0) {
+            y--;
+            d -= 2 * aSq * y;
         }
-        //region 2
-        x=a;
-        y=0;
-        d=Math.round(a*a-b*b*a+b*b/4);
-
-        while(b*b*x >= a*a*y){
-            plot(g,x+xc,y+yc,2);
-            plot(g,-x+xc,y+yc,2);
-            plot(g,x+xc,-y+yc,2);
-            plot(g,-x+xc,-y+yc,2);
-
-            y++;
-            if(d>=0){
-                x--;
-                d=d-2*b*b*x;
-            }
-            d=d+2*a*a*y+a*a;
-        }
-
+        d += 2 * bSq * x + bSq;
     }
+
+    d = Math.round(aSq - bSq * a + bSq / 4f);
+    x = a;
+    y = 0;
+
+    while (aSq * y <= bSq * x) {
+        plot(g, x + xc, y + yc, 2, color);
+        plot(g, -x + xc, y + yc, 2, color);
+        plot(g, x + xc, -y + yc, 2, color);
+        plot(g, -x + xc, -y + yc, 2, color);
+
+        y++;
+        if (d >= 0) {
+            x--;
+            d -= 2 * bSq * x;
+        }
+        d += 2 * aSq * y + aSq;
+    }
+}
+
+private static void plot(Graphics g, int x, int y, int size, Color color) {
+    g.setColor(color); // กำหนดสี
+    g.fillRect(x, y, size, size); // ทำให้ pixel ใหญ่ขึ้น
+}
     
     public static void bezierCurve(Graphics g,int x1,int y1,int x2,int y2,int x3 ,int y3,int x4,int y4){ 
         for(int i =0;i<3000;i++){ double t = i/(double)(2999); //find the value of t each round 
             double xt = Math.pow(1-t, 3)*x1 + 3*t*Math.pow(1-t,2)*x2+ 3*Math.pow(t, 2)*(1-t)*x3+ Math.pow(t,3)*x4; 
             double yt = Math.pow(1-t, 3)*y1 + 3*t*Math.pow(1-t,2)*y2+ 3*Math.pow(t, 2)*(1-t)*y3+ Math.pow(t,3)*y4; 
-            plot(g, (int)Math.round(xt), (int)Math.round(yt), 2);
+            plot(g, (int)Math.round(xt), (int)Math.round(yt), 1);
         } 
     }
     private void addBezierPointsToPolygon(Polygon polygon, int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) {
