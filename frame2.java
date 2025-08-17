@@ -44,7 +44,12 @@ public class frame2 extends JPanel  {
     new Color(62, 7, 3),
     //new Color(0,0,0)
 };
+private BufferedImage canvas; // BufferedImage สำหรับวาดทุกอย่าง
+
     public frame2() {
+        setPreferredSize(new Dimension(600, 600)); // กำหนดขนาด JPanel
+        canvas = new BufferedImage(600, 600, BufferedImage.TYPE_INT_ARGB);
+
         // Timer แสดงสีเปลี่ยน 0.5 วิ ต่อสี
     Timer bgChangeTimer = new Timer(500, e -> {
         backgroundStep++;
@@ -53,18 +58,18 @@ public class frame2 extends JPanel  {
             backgroundStep = bgColors.length - 1; // หยุดที่สีสุดท้าย
             ((Timer)e.getSource()).stop();
         }
-        repaint();
+        
     });
-        bgChangeTimer.start();
+    bgChangeTimer.start();
         // Timer เปลี่ยนหน้าเป็นหัวกะโหลกหลัง 2 วินาที
         Timer boneTimer = new Timer(2000, e -> {
             showBone = true;
             repaint();
 
-            // หลังจากเปลี่ยนหน้าเป็นหัวกะโหลกแล้ว 1 วินาที → เริ่มเลื่อนโต๊ะ
+                       // หลังจากเปลี่ยนหน้าเป็นหัวกะโหลกแล้ว 1 วินาที → เริ่มเลื่อนโต๊ะ
             Timer startDeskMove = new Timer(1000, ev -> {
                 deskTimer = new Timer(16, ev2 -> {
-                    deskOffsetX -=10; // เลื่อนไปทางขวา ถ้าอยากไปซ้ายเปลี่ยนเป็น -= 5
+                    deskOffsetX -= 10; // เลื่อนไปทางขวา ถ้าอยากไปซ้ายเปลี่ยนเป็น -= 5
                     if (deskOffsetX < -600) { // เมื่อโต๊ะเลื่อนไปจนถึงตำแหน่งที่กำหนด
                         deskTimer.stop(); // หยุดการเลื่อนของโต๊ะ
                     }
@@ -72,46 +77,46 @@ public class frame2 extends JPanel  {
                 });
                 deskTimer.start();
 
-        // ซ่อนชิ้นส่วนโต๊ะสีน้ำตาล
-            Timer hidepeicedeskTimer = new Timer(40, ev3 -> {
-                showbrown = false;
-                repaint();
-            });
-            hidepeicedeskTimer.setRepeats(false);
-            hidepeicedeskTimer.start();
+                // ซ่อนชิ้นส่วนโต๊ะสีน้ำตาล
+                Timer hidepeicedeskTimer = new Timer(40, ev3 -> {
+                    showbrown = false;
+                    repaint();
+                });
+                hidepeicedeskTimer.setRepeats(false);
+                hidepeicedeskTimer.start();
 
-            // ✅ เริ่มยืนขึ้นหลังโต๊ะเลื่อน 1 วินาที
-            standUpTimer = new Timer(100, ev4 -> {
-                pantsFrame++;
-                bodyoffsetY = -pantsFrame * 6; // สูงขึ้น
-                bodyoffsetX = -pantsFrame * 2; // ขยับซ้าย
-                headOffsetY = -pantsFrame * 7; // ให้สูงขึ้นเท่ากับเสื้อ
-                headOffsetX = -pantsFrame * 5; // ให้ขยับซ้ายเท่ากับเสื้อ
-                if (pantsFrame > 6) {
-                    standUpTimer.stop();
-                    pantsFrame = 6;
-                }
-                repaint();
-            });
+           // ✅ เริ่มยืนขึ้นหลังโต๊ะเลื่อน 1 วินาที
+                standUpTimer = new Timer(100, ev4 -> {
+                    pantsFrame++;
+                    bodyoffsetY = -pantsFrame * 6; // สูงขึ้น
+                    bodyoffsetX = -pantsFrame * 2; // ขยับซ้าย
+                    headOffsetY = -pantsFrame * 7; // ให้สูงขึ้นเท่ากับเสื้อ
+                    headOffsetX = -pantsFrame * 5; // ให้ขยับซ้ายเท่ากับเสื้อ
+                    if (pantsFrame > 6) {
+                        standUpTimer.stop();
+                        pantsFrame = 6;
+                    }
+                    repaint();
+                });
             standUpTimer.start();
 
             // ✅ 300ms หลังจากเริ่มยืน → เปลี่ยนเสื้อเป็น SideShirt
-            Timer changeShirtTimer = new Timer(300, ev5 -> {
-                useSideShirt = true;
-                repaint();
-            });
-            changeShirtTimer.setRepeats(false);
-            changeShirtTimer.start();
+                Timer changeShirtTimer = new Timer(300, ev5 -> {
+                    useSideShirt = true;
+                    repaint();
+                });
+                changeShirtTimer.setRepeats(false);
+                changeShirtTimer.start();
             });
             startDeskMove.setRepeats(false);
             startDeskMove.start();
 
-             
         });
         boneTimer.setRepeats(false);
         boneTimer.start();
 
-         // Timer ใหม่สำหรับเลื่อนเก้าอี้
+
+        // Timer ใหม่สำหรับเลื่อนเก้าอี้
         Timer startChairMove = new Timer(3500, e -> {
             chairTimer = new Timer(16, ev -> {
                 chairOffsetX += 30; // เลื่อนเก้าอี้ไปทางขวา
@@ -122,7 +127,7 @@ public class frame2 extends JPanel  {
         startChairMove.setRepeats(false);
         startChairMove.start();
 
-        // หลัง 3500ms → เริ่มเลื่อนฐานโลง
+// หลัง 3500ms → เริ่มเลื่อนฐานโลง
         Timer startBaseTimer = new Timer(3800, e -> {
             showBase = true;
             Timer moveBase = new Timer(16, ev -> {
@@ -153,85 +158,88 @@ public class frame2 extends JPanel  {
     }
 
     
-     @Override
+   @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
+        Graphics2D gCanvas = canvas.createGraphics();
 
         // พื้นหลัง
-        g2d.setColor(new Color(220, 220, 220));
-        g2d.fillRect(0, 0, getWidth(), getHeight());
+        gCanvas.setColor(new Color(220, 220, 220));
+        gCanvas.fillRect(0, 0, getWidth(), getHeight());
 
         // พื้นหลัง
         if (backgroundStep >= 0 && backgroundStep < bgColors.length) {
-            g2d.setColor(bgColors[backgroundStep]);
+            gCanvas.setColor(bgColors[backgroundStep]);
         } else {
-            g2d.setColor(new Color(220, 220, 220)); // สีปกติ
+            gCanvas.setColor(new Color(220, 220, 220)); // สีปกติ
         }
-        g2d.fillRect(0, 0, getWidth(), getHeight());
-         // 1. วาดฐานโลง (ด้านหลัง)
+        gCanvas.fillRect(0, 0, getWidth(), getHeight());
+
+        // 1. วาดฐานโลง (ด้านหลัง)
         if (showBase) {
-            g2d.translate(baseCoffinOffsetX, 0);
-            drawBaseCoffin(g2d);
-            g2d.translate(-baseCoffinOffsetX, 0);
+            gCanvas.translate(baseCoffinOffsetX, 0);
+            drawBaseCoffin(gCanvas);
+            gCanvas.translate(-baseCoffinOffsetX, 0);
         }
 
-          // วาดเก้าอี้พร้อมกับ offset
-        g2d.translate(chairOffsetX, 0);
-        drawShair(g2d); 
-        g2d.translate(-chairOffsetX, 0); 
+        // วาดเก้าอี้พร้อมกับ offset
+        gCanvas.translate(chairOffsetX, 0);
+        drawShair(gCanvas);
+        gCanvas.translate(-chairOffsetX, 0);
 
-        
-          // วาดกางเกงตามเฟรม
+        // วาดกางเกงตามเฟรม
         switch (pantsFrame) {
-            case 0 -> drawPants(g2d);         // นั่ง
-            case 1 -> drawPantsStanding1(g2d);
-            case 2 -> drawPantsStanding2(g2d);
-            case 3 -> drawPantsStanding3(g2d);
-            case 4 -> drawPantsStanding3(g2d);
-            case 5 -> drawPantsStanding4(g2d);
-            case 6 -> drawPantsStand5(g2d);
-             // ยืนเต็ม
+            case 0 -> drawPants(gCanvas);         // นั่ง
+            case 1 -> drawPantsStanding1(gCanvas);
+            case 2 -> drawPantsStanding2(gCanvas);
+            case 3 -> drawPantsStanding3(gCanvas);
+            case 4 -> drawPantsStanding3(gCanvas);
+            case 5 -> drawPantsStanding4(gCanvas);
+            case 6 -> drawPantsStand5(gCanvas);
+            // ยืนเต็ม
         }
         
-        g2d.translate(bodyoffsetX, bodyoffsetY);
-        g2d.translate(headOffsetX, headOffsetY);
+       gCanvas.translate(bodyoffsetX, bodyoffsetY);
+        gCanvas.translate(headOffsetX, headOffsetY);
         if (showBone) {
-            drawBone(g2d);
+            drawBone(gCanvas);
         } else {
-            drawhair(g2d);
-            drawFace(g2d);
-            drawbang(g2d);
+            drawhair(gCanvas);
+            drawFace(gCanvas);
+            drawbang(gCanvas);
         }
-        g2d.translate(-headOffsetX, -headOffsetY);
-         if (useSideShirt) {
-        drawSidehand(g2d);
-        drawSideShirt(g2d);
+        gCanvas.translate(-headOffsetX, -headOffsetY);
+        if (useSideShirt) {
+            drawSidehand(gCanvas);
+            drawSideShirt(gCanvas);
         } else {
-        drawShirt(g2d);
-        drawHand(g2d);
-    }
-        g2d.translate(-bodyoffsetX, -bodyoffsetY);
+            drawShirt(gCanvas);
+            drawHand(gCanvas);
+        }
+        gCanvas.translate(-bodyoffsetX, -bodyoffsetY);
 
-        if(showbrown){
-            drawPieceDesk(g2d);
+        if (showbrown) {
+            drawPieceDesk(gCanvas);
         }
 
-       
-    
         // เลื่อนเฉพาะโต๊ะและของบนโต๊ะ
-        g2d.translate(deskOffsetX, 0);
-        drawDesk(g2d);
-        drawLaptop(g2d);
-        g2d.translate(-deskOffsetX, 0);
+        gCanvas.translate(deskOffsetX, 0);
+        drawDesk(gCanvas);
+        drawLaptop(gCanvas);
+        gCanvas.translate(-deskOffsetX, 0);
         // เพิ่มวัตถุอื่นๆ บนโต๊ะที่ต้องการเลื่อนในนี้
-
-         // 3. วาดฝาโลง (อยู่หน้ากางเกง)
+        
+        
+       // 3. วาดฝาโลง (อยู่หน้ากางเกง)
         if (showLid) {
-            g2d.translate(lidCoffinOffsetX, 0);
-            drawLidCoffin(g2d);
-            g2d.translate(-lidCoffinOffsetX, 0);
+            gCanvas.translate(lidCoffinOffsetX, 0);
+            drawLidCoffin(gCanvas);
+            gCanvas.translate(-lidCoffinOffsetX, 0);
         }
+
+        g2d.drawImage(canvas, 0, 0, this);
+        gCanvas.dispose();
     }
    
     private void drawSideShirt(Graphics2D g2d){
@@ -239,7 +247,7 @@ public class frame2 extends JPanel  {
         int dy=130;
         
         // สร้าง BufferedImage แยก ----------
-    int width = 500, height = 500; // กำหนดพื้นที่พอสำหรับเสื้อ
+    int width = 600, height = 600; // กำหนดพื้นที่พอสำหรับเสื้อ
     BufferedImage shirtImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
     Graphics2D gShirt = shirtImage.createGraphics();
 
@@ -275,62 +283,74 @@ public class frame2 extends JPanel  {
 
     }
     private void drawSidehand(Graphics2D g2d){
-        int dx=180;
-        int dy=125;
+        int dx=177;
+        int dy=122;
         int x =173;
         int y = 118;
-        GeneralPath hand = new GeneralPath();
-        hand.moveTo(197+dx,348+dy);
-        hand.curveTo(197+dx,328+dy,212+dx,385+dy,195+dx,389+dy);
-        hand.curveTo(181+dx,393+dy,192+dx,369+dy,181+dx,364+dy);
-        hand.curveTo(181+dx,364+dy,178+dx,382+dy,169+dx,352+dy);
-        hand.lineTo(197+dx,348+dy);
-        g2d.setColor(new Color(255,255,255));
-        g2d.fill(hand);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(hand);
-        GeneralPath handl = new GeneralPath();
 
-        handl.moveTo(16+x,352+y);
-        handl.curveTo(16+x,352+y,3+x,398+y,15+x,395+y);
-        handl.curveTo(28+x,392+y,21+x,377+y,32+x,372+y);
-        handl.curveTo(32+x,372+y,31+x,397+y,44+x,358+y);
-        handl.lineTo(16+x,352+y);
-        g2d.setColor(new Color(255,255,255));
-        g2d.fill(handl);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(handl);
+    int width = 600, height = 600; // กำหนดพื้นที่พอสำหรับเสื้อ
+    BufferedImage SideHandImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D gSideHand = SideHandImage.createGraphics();
+
+    // เปิด Anti-alias
+    gSideHand.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    gSideHand.setColor(Color.BLACK);
+    bezierCurve(gSideHand, 196+dx,350+dy, 206+dx,363+dy, 205+dx,375+dy, 205+dx,375+dy);
+    bezierCurve(gSideHand, 205+dx,375+dy, 203+dx,387+dy, 199+dx,392+dy, 193+dx,385+dy);
+    bezierCurve(gSideHand, 193+dx,385+dy, 186+dx,377+dy, 191+dx,372+dy, 181+dx,364+dy);
+    bezierCurve(gSideHand, 181+dx,364+dy, 181+dx,364+dy, 173+dx,380+dy, 171+dx,355+dy);
+    bresenhamLine(gSideHand,171+dx,355+dy, 196+dx,350+dy,1);
+        
+    // --- วาดมือด้านซ้าย ---
+    bezierCurve(gSideHand, 16+x,352+y, 16+x,352+y, 3+x,398+y, 15+x,395+y);
+    bezierCurve(gSideHand, 15+x,395+y, 28+x,392+y, 21+x,377+y, 32+x,372+y);
+    bezierCurve(gSideHand, 32+x,372+y, 32+x,372+y, 31+x,397+y, 44+x,358+y);
+    bresenhamLine(gSideHand, 44+x,358+y, 16+x,352+y,1);
+    gSideHand.dispose();
+    
+    floodFill(SideHandImage, 192+dx, 365+dy, new Color(0,0,0,0), Color.WHITE);
+    floodFill(SideHandImage, 25+x, 370+y, new Color(0,0,0,0), Color.WHITE);
+    
+    g2d.drawImage(SideHandImage, 0, 0, null);
+
+    
     }
    
     private void drawFace(Graphics2D g2d) {
         int dx = -40; // ลดแกน X ลง 50
         int dy = 100;  // เพิ่มแกน Y ขึ้น 70
          //วาดคอ
+         Polygon neck = new Polygon();
+        neck.addPoint(348 + dx, 235 + dy);      
+        neck.addPoint(348 + 35 + dx, 235 + dy);     
+        neck.addPoint(348 + 35 + dx, 235 + 25 + dy); 
+        neck.addPoint(348 + dx, 235 + 25 + dy);   
         g2d.setColor(Color.WHITE);
-        //g2d.setStroke(new BasicStroke(2));
-        g2d.fillRect(298+10, 235+dy, 35, 25);
+        g2d.fillPolygon(neck); // วาดรูปสี่เหลี่ยมแบบทึบ
         g2d.setColor(Color.BLACK);
-        g2d.drawRect(298+10, 235+dy, 35, 25);
+        g2d.drawPolygon(neck); // วาดเส้นขอบของรูปสี่เหลี่ยม
         
-       GeneralPath face = new GeneralPath();
-       face.moveTo(314+dx,174+dy);
-       face.curveTo(314+dx,174+dy,261+dx,257+dy,367+dx,239+dy);
-        face.curveTo(473+dx,220+dy,355+dx,86+dy,314+dx,174+dy);
-        g2d.setColor(Color.WHITE); // สีชมพู
-        g2d.fill(face);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(face);
-       // g2d.setStroke(new BasicStroke(1));
+        //วาดหน้า
+        int width = 600, height = 600; // กำหนดพื้นที่พอสำหรับเสื้อ
+        BufferedImage faceImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D gface = faceImage.createGraphics();
+        gface.setColor(Color.BLACK);
+        bezierCurve(gface, 314+dx,174+dy,261+dx,257+dy,367+dx,239+dy,367+dx,239+dy);
+        bezierCurve(gface, 367+dx,239+dy,473+dx,220+dy,355+dx,86+dy,314+dx,174+dy);
+        gface.dispose();
+        floodFill(faceImage, 306, 326, new Color(0,0,0,0), Color.WHITE);
+        g2d.drawImage(faceImage, 0, 0, null);
+  
+       
        //วาดตา
         g2d.setColor(Color.BLACK); 
-        g2d.setStroke(new BasicStroke(5)); // ความหนาหลอด
-        g2d.drawLine(325 + dx, 190+dy , 325 + dx, 197+dy); // ตาซ้าย
-        g2d.drawLine(350 + dx, 190+dy, 350 + dx, 197+dy ); // ตาขวา
-        g2d.setStroke(new BasicStroke(1)); // คืนความหนาเดิม
+        bresenhamLine(g2d,325 + dx, 190+dy , 325 + dx, 197+dy,5);
+        bresenhamLine(g2d,350 + dx, 190+dy, 350 + dx, 197+dy,5);
+       
     //วาดปาก
-        //g2d.drawLine(327 + dx, 225 + dy, 353 + dx, 219 + dy);
-        g2d.drawArc(325+dx, 215+dy, 20, 5, 0, -180);
-        //วาดหู
+       bezierCurve(g2d, 292, 340-20, 303, 349-20, 315, 339-20,315, 339-20);
+        
+    //วาดหู
        
 
     }
@@ -338,36 +358,7 @@ public class frame2 extends JPanel  {
         int dx = 18; // ลดแกน X ลง 50
         int dy = 169;  // เพิ่มแกน Y ขึ้น 70
         int x = 14;
-        GeneralPath handr = new GeneralPath();
-        handr.moveTo(289+dx, 333+dy);
-        handr.curveTo(289+dx, 330+dy, 294+dx, 306+dy, 269+dx, 304+dy);
-        handr.curveTo(242+dx, 300+dy, 224+dx, 328+dy, 231+dx, 327+dy);
-        handr.curveTo(231+dx, 327+dy, 225+dx, 351+dy, 247+dx, 337+dy);
-        handr.curveTo(247+dx, 337+dy,277+dx,330+dy,289+dx, 333+dy);
-        g2d.setColor(Color.WHITE); // สีชมพู
-        g2d.fill(handr);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(handr);
-        bezierCurve(g2d, 267+dx,320+ dy,255+dx, 316+dy, 235+dx, 340+dy,  235+dx, 340+dy);
-        bezierCurve(g2d, 262+dx,313+ dy, 246+dx, 311+dy, 230+dx, 338+dy,  230+dx, 338+dy);
-        bezierCurve(g2d, 261+dx, 305+dy, 246+dx, 303+dy, 231+dx, 328+dy,  231+dx, 328+dy);
-        
-        GeneralPath handl = new GeneralPath();  
-        handl.moveTo(250+x,306+dy);
-        handl.curveTo(250+x, 306+dy, 244+x,285+dy, 219+x, 301+dy);
-        handl.curveTo(195+x,316+dy,199+x,354+dy,231+x,339+dy);
-        handl.curveTo(231+x,339+dy,229+x,324+dy,250+x,306+dy);
-        g2d.setColor(Color.WHITE); 
-        g2d.fill(handl);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(handl);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(handr);
-        bezierCurve(g2d, 213+x,341+ dy,204+x, 326+dy, 218+x, 309+dy, 218+x, 309+dy);
-        bezierCurve(g2d, 221+x,341+ dy, 214+x, 324+dy, 227+x, 310+dy,  227+x, 310+dy);
-        bezierCurve(g2d, 231+x,341+ dy, 224+x, 324+dy, 237+x, 310+dy,  237+x, 310+dy);
-        //bezierCurve(g2d, 261+dx, 305+dy, 246+dx, 303+dy, 231+dx, 328+dy,  231+dx, 328+dy);
-        
+      
     }
 
    private void drawBaseCoffin(Graphics2D g2d) {
@@ -453,7 +444,7 @@ public class frame2 extends JPanel  {
         
     }
 
-    private void drawShair(Graphics2D g2d){
+    private void drawShair2(Graphics2D g2d){
         int dx = 30;
         int dy = 160;
 
@@ -482,8 +473,50 @@ public class frame2 extends JPanel  {
         g2d.drawLine(393+dx, 325+dy, 402+dx, 468+dy);
 
     }
+    private void drawShair(Graphics2D g2d){
+    int dx = 30;
+    int dy = 160;
+
+    // สร้าง BufferedImage และ Graphics2D สำหรับการวาดเก้าอี้และเติมสี
+    int width = 600, height = 600; // กำหนดขนาดตามที่โปรแกรมหลักใช้
+    BufferedImage chairImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D chairG2d = chairImage.createGraphics();
+
+    // วาดเส้นขอบของเก้าอี้ด้วยสีดำ เพื่อให้ floodFill สามารถเติมสีได้
+    chairG2d.setColor(Color.BLACK);
+
+    // วาดรูปทรงปิดของเก้าอี้
+    // ต้องวาดแต่ละเส้นเชื่อมต่อกันเป็นรูปทรงปิด
+    bresenhamLine(chairG2d, 248 + dx, 200 + dy, 423 + dx, 215 + dy,2); // sh.lineTo(423+dx, 215+dy);
+    bezierCurve(chairG2d, 423 + dx, 215 + dy, 440 + dx, 214 + dy, 440 + dx, 245 + dy, 440 + dx, 245 + dy); // sh.curveTo(...)
+    bresenhamLine(chairG2d, 440 + dx, 245 + dy, 433 + dx, 457 + dy,2); // sh.lineTo(433+dx, 457+dy);
+    bresenhamLine(chairG2d, 433 + dx, 457 + dy, 355 + dx, 485 + dy,2); // sh.lineTo(355+dx, 485+dy);
+    bresenhamLine(chairG2d, 355 + dx, 485 + dy, 146 + dx, 451 + dy,2); // sh.lineTo(146+dx, 451+dy);
+    bresenhamLine(chairG2d, 146 + dx, 451 + dy, 139 + dx, 354 + dy,2); // sh.lineTo(139+dx, 354+dy);
+    bezierCurve(chairG2d, 139 + dx, 354 + dy, 135 + dx, 330 + dy, 207 + dx, 306 + dy, 207 + dx, 306 + dy); // sh.curveTo(...)
+    bezierCurve(chairG2d, 207 + dx, 306 + dy, 209 + dx, 200 + dy, 248 + dx, 200 + dy, 248 + dx, 200 + dy); // sh.curveTo(...)
+
+    // ปิดการใช้งาน Graphics2D เพื่อให้การวาดถูกบันทึกลงใน BufferedImage
+    //chairG2d.dispose();
+
+    // เติมสีภายในรูปทรงเก้าอี้ที่วาดไว้
+    // กำหนดสีเป้าหมายเป็นสีของพื้นหลัง (ซึ่งเป็นสีดำตามค่าเริ่มต้นของ BufferedImage)
+    // กำหนดสีที่จะเติมเป็นสีเทาอ่อน
+    floodFill(chairImage, 300 + dx, 300 + dy, Color.BLACK, new Color(210, 210, 210));
     
-    public void drawhair(Graphics2D g2d){
+    // วาดรูปภาพที่เติมสีแล้วลงบนหน้าจอหลัก
+    g2d.drawImage(chairImage, 0, 0, null);
+
+    // วาดเส้นส่วนประกอบอื่นๆ ที่ไม่ได้เป็นส่วนหนึ่งของรูปทรงหลัก
+    g2d.setColor(Color.BLACK);
+    g2d.drawLine(139 + dx, 354 + dy, 351 + dx, 388 + dy);
+    g2d.drawLine(351 + dx, 388 + dy, 355 + dx, 485 + dy);
+    bezierCurve(g2d, 351 + dx, 388 + dy, 340 + dx, 368 + dy, 394 + dx, 333 + dy, 394 + dx, 333 + dy);
+    g2d.drawLine(207 + dx, 306 + dy, 393 + dx, 330 + dy);
+    bezierCurve(g2d, 423 + dx, 215 + dy, 385 + dx, 197 + dy, 393 + dx, 325 + dy, 393 + dx, 325 + dy);
+    g2d.drawLine(393 + dx, 325 + dy, 402 + dx, 468 + dy);
+}
+    public void drawhair2(Graphics2D g2d){
     int dx = -40; // ลดแกน X ลง 50
     int dy = 100;  // เพิ่มแกน Y ขึ้น 70
 
@@ -503,6 +536,50 @@ public class frame2 extends JPanel  {
     g2d.setColor(Color.BLACK);
     g2d.draw(hairPath);
      
+}public void drawhair(Graphics2D g2d){
+    int dx = -40; 
+    int dy = 100;
+
+    int width = 600, height = 600; // กำหนดขนาดตามที่โปรแกรมหลักใช้
+    BufferedImage hairImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D hairG2d = hairImage.createGraphics();
+    hairG2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // วาดเส้นขอบของผมด้วยสีดำเพื่อให้ floodFill สามารถเติมสีได้
+    hairG2d.setColor(Color.BLACK);
+
+    // วาดรูปทรงผมด้วย bezierCurve
+    // เส้นที่ 1
+    bezierCurve(hairG2d, 293+dx, 224+dy, 285+dx, 171+dy, 291+dx, 156+dy, 323+dx, 130+dy);
+    // เส้นที่ 2
+    bezierCurve(hairG2d, 323+dx, 130+dy, 355+dx, 105+dy, 411+dx, 118+dy, 430+dx, 163+dy);
+    // เส้นที่ 3
+    bezierCurve(hairG2d, 430+dx, 163+dy, 449+dx, 209+dy, 411+dx, 253+dy, 448+dx, 287+dy);
+    // เส้นที่ 4
+    bezierCurve(hairG2d, 448+dx, 287+dy, 484+dx, 322+dy, 434+dx, 323+dy, 455+dx, 334+dy);
+    // เส้นที่ 5
+    bezierCurve(hairG2d, 455+dx, 334+dy, 474+dx, 346+dy, 309+dx, 343+dy, 286+dx, 334+dy);
+    // เส้นที่ 6
+    bezierCurve(hairG2d, 286+dx, 334+dy, 263+dx, 323+dy, 293+dx, 325+dy, 283+dx, 313+dy);
+    // เส้นที่ 7
+    bezierCurve(hairG2d, 283+dx, 313+dy, 269+dx, 295+dy, 305+dx, 287+dy, 293+dx, 224+dy);
+
+    // ปิดการใช้งาน Graphics2D เพื่อให้การวาดถูกบันทึกลงใน BufferedImage
+    hairG2d.dispose();
+
+    // เติมสีภายในรูปทรงผมที่วาดไว้
+    // targetColor คือสีของพื้นหลัง (สีดำ)
+    // replacementColor คือสีชมพู
+    floodFill(hairImage, 350 + dx, 250 + dy, Color.BLACK, new Color(238, 157, 236));
+    
+    // วาดรูปภาพที่เติมสีแล้วลงบนหน้าจอหลัก
+    g2d.drawImage(hairImage, 0, 0, null);
+    
+    // วาดเส้นขอบอีกครั้ง เพื่อให้เส้นขอบคมชัดแม้ถูกเติมสีแล้ว
+    // (สามารถเลือกที่จะวาดหรือไม่วาดก็ได้)
+    g2d.setColor(Color.BLACK);
+    // วาดเส้น bezierCurve และ drawLine ตามโค้ดเดิมซ้ำอีกครั้ง
+    // ...
 }
     public void drawbang(Graphics2D g2d){
     int dx = -40;
@@ -846,10 +923,10 @@ public class frame2 extends JPanel  {
         d=Math.round(b*b-a*a*b+a*a/4);
         
         while(b*b*x <= a*a*y){
-            plot(g,x+xc,y+yc);
-            plot(g,-x+xc,y+yc);
-            plot(g,x+xc,-y+yc);
-            plot(g,-x+xc,-y+yc);
+            plot(g,x+xc,y+yc,2);
+            plot(g,-x+xc,y+yc,2);
+            plot(g,x+xc,-y+yc,2);
+            plot(g,-x+xc,-y+yc,2);
 
             x++;
 
@@ -865,10 +942,10 @@ public class frame2 extends JPanel  {
         d=Math.round(a*a-b*b*a+b*b/4);
 
         while(b*b*x >= a*a*y){
-            plot(g,x+xc,y+yc);
-            plot(g,-x+xc,y+yc);
-            plot(g,x+xc,-y+yc);
-            plot(g,-x+xc,-y+yc);
+            plot(g,x+xc,y+yc,2);
+            plot(g,-x+xc,y+yc,2);
+            plot(g,x+xc,-y+yc,2);
+            plot(g,-x+xc,-y+yc,2);
 
             y++;
             if(d>=0){
@@ -880,29 +957,18 @@ public class frame2 extends JPanel  {
 
     }
     
-     public static void bezierCurve(Graphics g,int x1,int y1,int x2,int y2,int x3 ,int y3,int x4,int y4){
-        for(int i =0;i<1000;i++){
-            double t = i/(double)(999); //find the value of t each round
-            double xt = Math.pow(1-t, 3)*x1 + 
-                        3*t*Math.pow(1-t,2)*x2+
-                        3*Math.pow(t, 2)*(1-t)*x3+
-                        Math.pow(t,3)*x4;
-
-            double yt = Math.pow(1-t, 3)*y1 + 
-                        3*t*Math.pow(1-t,2)*y2+
-                        3*Math.pow(t, 2)*(1-t)*y3+
-                        Math.pow(t,3)*y4;
-            plot(g,xt,yt);
-            
+    public static void bezierCurve(Graphics g,int x1,int y1,int x2,int y2,int x3 ,int y3,int x4,int y4){ 
+        for(int i =0;i<3000;i++){ double t = i/(double)(2999); //find the value of t each round 
+            double xt = Math.pow(1-t, 3)*x1 + 3*t*Math.pow(1-t,2)*x2+ 3*Math.pow(t, 2)*(1-t)*x3+ Math.pow(t,3)*x4; 
+            double yt = Math.pow(1-t, 3)*y1 + 3*t*Math.pow(1-t,2)*y2+ 3*Math.pow(t, 2)*(1-t)*y3+ Math.pow(t,3)*y4; 
+            plot(g, (int)Math.round(xt), (int)Math.round(yt), 2);
+        } 
         }
-    }
-    private static void plot(Graphics g,double x,double y){
-      
-        g.fillRect((int)x,(int)y,2,2); //ใช้การวาดสี่เหลี่ยมเเทนการวาดจุด
-       
-    }
-      public static BufferedImage floodFill(BufferedImage image, int x, int y, Color targetColor,
-            Color replacementColor) {
+    
+            private static void plot(Graphics g, int x, int y, int size){
+    g.fillRect(x, y, size, size); // ทำให้ pixel ใหญ่ขึ้น
+}
+      public  static BufferedImage floodFill(BufferedImage image, int x, int y, Color targetColor,Color replacementColor) {
 
         int targetRGB = targetColor.getRGB();
         int replacementRGB = replacementColor.getRGB();
@@ -937,6 +1003,47 @@ public class frame2 extends JPanel  {
 
         return image;
     }
+     private static void bresenhamLine(Graphics g, int x1, int y1, int x2, int y2,int si) {
+            int dx = Math.abs(x2 - x1);
+            int dy = Math.abs(y2 - y1);
+
+            int sx = (x1 < x2) ? 1 : -1;
+            int sy = (y1 < y2) ? 1 : -1;
+             int size = si;
+            boolean isSwap = false;
+
+            if (dy > dx) {
+                int temp = dx;
+                dx = dy;
+                dy = temp;
+                isSwap = true;
+            }
+
+            int D = 2 * dy - dx;
+
+            int x = x1;
+            int y = y1;
+
+            for (int i = 0; i <= dx; i++) {
+                plot(g, x, y,size);
+
+                if (D >= 0) {
+                    if (isSwap)
+                        x += sx;
+                    else
+                        y += sy;
+
+                    D -= 2 * dx;
+                }
+
+                if (isSwap)
+                    y += sy;
+                else
+                    x += sx;
+
+                D += 2 * dy;
+            }
+        }
     public static void main(String[] args) {
         JFrame frame = new JFrame("Animation");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
