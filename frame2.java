@@ -237,22 +237,38 @@ public class frame2 extends JPanel  {
     private void drawSideShirt(Graphics2D g2d){
         int dx=175;
         int dy=130;
-        GeneralPath sh = new GeneralPath();
-        sh.moveTo(83+dx,180+dy);
-        sh.curveTo(83+dx,180+dy,95+dx,192+dy,122+dx,181+dy);
-        sh.curveTo(122+dx,181+dy,148+dx,164+dy,174+dx,236+dy);
-        sh.curveTo(199+dx,305+dy,209+dx,328+dy,204+dx,338+dy);
-        sh.curveTo(199+dx,347+dy,168+dx,352+dy,160+dx,344+dy);
-        sh.curveTo(160+dx,344+dy,151+dx,332+dy,151+dx,323+dy);
-        sh.curveTo(151+dx,323+dy,90+dx,340+dy,53+dx,328+dy);
-        sh.curveTo(53+dx,328+dy,50+dx,343+dy,42+dx,345+dy);
-        sh.curveTo(34+dx,345+dy,25+dx,351+dy,7+dx,343+dy);
-        sh.curveTo(-10+dx,338+dy,25+dx,251+dy,31+dx,233+dy);
-        sh.curveTo(37+dx,215+dy,57+dx,177+dy,83+dx,180+dy);
-        g2d.setColor(new Color(131,192,231));
-        g2d.fill(sh);
-        g2d.setColor(Color.BLACK);
-        g2d.draw(sh);
+        
+        // สร้าง BufferedImage แยก ----------
+    int width = 500, height = 500; // กำหนดพื้นที่พอสำหรับเสื้อ
+    BufferedImage shirtImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+    Graphics2D gShirt = shirtImage.createGraphics();
+
+    // เปิด Anti-alias
+    gShirt.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+    // ---------- 2 วาดเส้นขอบเสื้อ (สีดำ) ----------
+    gShirt.setColor(Color.BLACK);
+        // เส้นรอบนอก (ปิดรูปร่างกลับมาจุดเริ่มต้น)
+        bezierCurve(gShirt, 83+dx,180+dy, 83+dx,180+dy, 95+dx,192+dy, 122+dx,181+dy);
+        bezierCurve(gShirt, 122+dx,181+dy, 122+dx,181+dy, 148+dx,164+dy, 174+dx,236+dy);
+        bezierCurve(gShirt, 174+dx,236+dy, 199+dx,305+dy, 209+dx,328+dy, 204+dx,338+dy);
+        bezierCurve(gShirt, 204+dx,338+dy, 199+dx,347+dy, 168+dx,352+dy, 160+dx,344+dy);
+        bezierCurve(gShirt, 160+dx,344+dy, 160+dx,344+dy, 151+dx,332+dy, 151+dx,323+dy);
+        bezierCurve(gShirt, 151+dx,323+dy, 151+dx,323+dy, 90+dx,340+dy, 53+dx,328+dy);
+        bezierCurve(gShirt, 53+dx,328+dy, 53+dx,328+dy, 50+dx,343+dy, 42+dx,345+dy);
+        bezierCurve(gShirt, 42+dx,345+dy, 34+dx,345+dy, 25+dx,351+dy, 7+dx,343+dy);
+        bezierCurve(gShirt, 7+dx,343+dy, -10+dx,338+dy, 25+dx,251+dy, 31+dx,233+dy);
+        bezierCurve(gShirt, 31+dx,233+dy, 37+dx,215+dy, 57+dx,177+dy, 83+dx,180+dy);
+
+         gShirt.dispose();
+
+       // ---------- 3ใช้ FloodFill เติมสี ----------
+    int seedX =90 + dx;  // เลือกจุดที่มั่นใจว่าอยู่ในเสื้อ
+    int seedY = 190+ dy;  
+    floodFill(shirtImage, seedX, seedY, new Color(0,0,0,0), new Color(131,192,231));
+
+    // ---------- 4 วาดเสื้อที่เสร็จแล้วกลับมาที่ g2d ----------
+    g2d.drawImage(shirtImage, 0, 0, null);
         
         bezierCurve(g2d, 136+dx,227+dy,142+dx, 305+dy,153+dx,325+dy, 153+dx, 325+dy);
         bezierCurve(g2d,63+dx,231+dy,59+dx,304+dy,53+dx,329+dy,53+dx,329+dy);
@@ -882,7 +898,7 @@ public class frame2 extends JPanel  {
     }
     private static void plot(Graphics g,double x,double y){
       
-        g.fillRect((int)x,(int)y,1,1); //ใช้การวาดสี่เหลี่ยมเเทนการวาดจุด
+        g.fillRect((int)x,(int)y,2,2); //ใช้การวาดสี่เหลี่ยมเเทนการวาดจุด
        
     }
       public static BufferedImage floodFill(BufferedImage image, int x, int y, Color targetColor,
